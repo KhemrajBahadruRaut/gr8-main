@@ -316,7 +316,7 @@ export default function AboutSection() {
         {
           name: "Khemraj Bahadur Raut",
           role: "Lead Developer",
-          bio: "Full-stack developer specializing in property management platforms and digital solutions.",
+          bio: "Full-stack developer specializing in different platforms and digital solutions.",
           icon: Code,
           avatar: "/team/a.png",
           department: "Technology",

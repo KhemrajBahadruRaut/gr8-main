@@ -51,7 +51,7 @@ export default function MainPage() {
             <Link
               className="bg-linear-to-r from-[#B64546] to-[#F2D08A] hover:from-[#F2D08A] hover:to-[#B64546] hover:scale-105 hover:shadow-sm transition-all duration-300 ease-in-out text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-orange-600/50 animate-fade-in-up"
               style={{ animationDelay: "400ms" }}
-              href="#"
+              href="/portfolio"
             >
               See our Works
             </Link>

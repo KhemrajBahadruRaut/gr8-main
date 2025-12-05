@@ -84,7 +84,7 @@ const TeamMember = React.memo(({ member, index, level = 0 }) => {
       {/* Level indicator */}
       <div className="absolute top-4 right-4">
         <div className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getBadgeColor()}`}>
-          {level === 0 ? 'Leadership' : level === 1 ? 'Management' : 'Team'}
+          {level === 0 ? 'Co-Founder' : level === 1 ? 'Co-Founder' : 'Team'}
         </div>
       </div>
 
@@ -237,11 +237,11 @@ export default function AboutSection() {
       members: [
         {
           name: "Sujata Tamrakar",
-          role: "Founder",
-          bio: "Visionary leader with 15+ years of experience in real estate technology and digital transformation. Drives company strategy and innovation.",
+          role: "Co-Founder",
+          bio: "Leverages accounting and operations experience to strengthen internal processes and support leadership decisions.",
           icon: Rocket,
           avatar: "/team/s.png",
-          department: "Founder",
+          department: "Executive Leadership",
           social: {
             linkedin: "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
             email: "sujata@gr8private.com"
@@ -258,7 +258,7 @@ export default function AboutSection() {
           {
           name: "Nilendra Tamrakar",
           role: "Managing Director",
-          bio: "Strategic thinker with expertise in business development and market expansion. Oversees corporate governance and long-term vision.",
+          bio: "Over 20+ years of progressive experience in technology, networking, and operations, combining strategic direction with hands-on leadership to accelerate growth and operational efficiency.",
           icon: Shield,
           avatar: "/team/n.jpg",
           department: "Executive Leadership",
@@ -270,7 +270,7 @@ export default function AboutSection() {
         {
           name: "Dipak Maharjan",
           role: "Technical Director",
-          bio: "Strategic thinker with expertise in business development and market expansion. Oversees corporate governance and long-term vision.",
+          bio: "Specializing in graphic design, print production, and publication for 20+ years, leveraging technical tools and operational strategies to deliver efficient, high-quality creative solutions.",
           icon: Shield,
           avatar: "/team/d.jpg",
           department: "Executive Leadership",
@@ -281,7 +281,7 @@ export default function AboutSection() {
         },
         {
           name: "Suraj Tamrakar",
-          role: "Technical Director",
+          role: "Co-Founder",
           bio: "Strategic thinker with expertise in business development and market expansion. Oversees corporate governance and long-term vision.",
           icon: Shield,
           avatar: "/team/su.webp",
@@ -302,11 +302,11 @@ export default function AboutSection() {
         // Sales & Marketing Team
         {
           name: "Injol Shrestha",
-          role: "Marketing Specialist, SEO",
-          bio: "Implements digital marketing strategies and manages social media presence.",
+          role: "Sales & Business Development Manage",
+          bio: "Expands business opportunities by building client relationships, driving sales, and supporting strategic growth initiatives.",
           icon: Megaphone,
           avatar: "/team/i.jpg",
-          department: "SEO Specialist",
+          department: "Marketing",
           social: {
             linkedin: "https://www.linkedin.com/in/injol-shrestha/",
             email: "injol@gr8.com.np",
@@ -315,8 +315,8 @@ export default function AboutSection() {
         // Development Team
         {
           name: "Khemraj Bahadur Raut",
-          role: "Lead Developer",
-          bio: "Full-stack developer specializing in different platforms and digital solutions.",
+          role: "Technical Solutions Architect",
+          bio: "Specializes in building engaging, responsive applications that delight users and meet business goals.",
           icon: Code,
           avatar: "/team/a.png",
           department: "Technology",
@@ -327,8 +327,8 @@ export default function AboutSection() {
         },
         {
           name: "Ridima Tuladhar",
-          role: "Developer",
-          bio: "Specializes in creating responsive and user-friendly interfaces for web applications.",
+          role: "Creative Technology Architect",
+          bio: "Designs seamless, user-focused applications that combine creativity with cutting-edge technology.",
           icon: Code,
           avatar: "/team/ri.jpg",
           department: "Technology",
@@ -343,7 +343,7 @@ export default function AboutSection() {
         {
           name: "Anup Shrestha",
           role: "Graphics Design Lead",
-          bio: "Creative director specializing in branding, and visual communication.",
+          bio: "Designing innovative visual solutions that strengthen brands and communicate effectively",
           icon: Palette,
           avatar: "/team/an.webp",
           department: "Creative",
@@ -354,8 +354,8 @@ export default function AboutSection() {
         },
           {
           name: "Rahul Rajkanikar",
-          role: "Business Development Officer",
-          bio: "Creates engaging marketing and client communication content for business development.",
+          role: "Business Operations Officer",
+          bio: "Streamlining daily operations and enabling our team to achieve their full potential.",
           icon: PenTool,
           avatar: "/team/r.jpg",
           department: "Business Development",
@@ -366,8 +366,8 @@ export default function AboutSection() {
         },
         {
           name: "Prasuna Salike",
-          role: "Business Development",
-          bio: "Combines sales expertise with creative marketing to attract customers and grow revenue.",
+          role: "Sales & Business Growth Officer",
+          bio: "Growing the business by connecting with clients and creating new opportunities.",
           icon: Users,
           avatar: "/team/p.jpg",
           department: "Sales & Marketing",

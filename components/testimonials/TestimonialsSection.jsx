@@ -23,45 +23,45 @@ export default function TestimonialsSection() {
   const testimonials = [
     {
       id: 1,
-      quote: "Working with this team transformed our digital presence. Their attention to detail and technical expertise delivered results beyond our expectations. The website they built has significantly increased our conversion rates.",
-      author: "Sarah Johnson",
-      role: "Marketing Director, TechCorp",
-      date: "15th January, 2024",
+      quote: "Best digital marketing company in Kathmandu, thank you team for wonderful service.",
+      author: "jay kumar rai",
+      role: "Designer",
+      date: "1 week ago",
       rating: 5,
       avatar: null
     },
     {
       id: 2,
-      quote: "Outstanding service from start to finish. They understood our vision and executed it perfectly. The mobile app they developed has received fantastic feedback from our users and has streamlined our operations.",
-      author: "Michael Chen",
-      role: "CEO, Innovate Solutions",
+      quote: "GR8 Private Limited is really good. The team is friendly, helpful, and professional. They manage everything smoothly and respond quickly. I’m happy with their service and would definitely recommend them to others.🙂🙂",
+      author: "Smriti raut",
+      role: "Makeup Artist",
       date: "22nd March, 2024",
       rating: 5,
       avatar: null
     },
     {
       id: 3,
-      quote: "The SEO strategy implemented by this team tripled our organic traffic in just 3 months. Their data-driven approach and regular reporting made us feel confident in our investment. Highly recommended!",
-      author: "Emily Rodriguez",
-      role: "E-commerce Manager, StyleHub",
+      quote: "The team worked fast and made the whole process feel effortless. They explained every step clearly and gave me full control. Any changes I asked for were handled with care and speed. loved their work🥰",
+      author: "Roeisha Lwagunz",
+      role: "manager",
       date: "8th May, 2024",
       rating: 5,
       avatar: null
     },
     {
       id: 4,
-      quote: "Their brand design work captured our company's essence perfectly. The new visual identity has strengthened our market position and received praise from clients and stakeholders alike.",
-      author: "David Thompson",
-      role: "Founder, GreenFuture Inc",
+      quote: "If you want a website that’s not just beautiful but unforgettable, this company delivers with style and substance. I’m so happy I chose them—truly top-notch!",
+      author: "Pratima Karki",
+      role: "Manager at Japnese Language Association",
       date: "12th July, 2024",
       rating: 5,
       avatar: null
     },
     {
       id: 5,
-      quote: "The social media campaign they created generated a 200% increase in engagement and significantly boosted our brand awareness. Their creative approach and strategic planning were impressive.",
-      author: "Lisa Wang",
-      role: "Brand Manager, CosmoBeauty",
+      quote: "GR8 Nepal rescued me from a complicated tenant dispute! Their expertise in Nepal's rental laws is exceptional, ensuring that everything was legally compliant. I no longer have to worry about paperwork or regulations.",
+      author: "Silver Dj King",
+      role: "Content Creator",
       date: "30th September, 2024",
       rating: 5,
       avatar: null

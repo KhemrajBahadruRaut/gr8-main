@@ -100,12 +100,12 @@ const Navbar = () => {
   const socialLinks = [
     {
       icon: <FaFacebookF className="text-[15px] text-white" />,
-      link: "https://www.facebook.com/gr8nepal/",
+      link: "https://www.facebook.com/GR8DigitalSolution",
       svg: "/icons/GR8-Nepal-fb.webp",
     },
     {
       icon: <FaInstagram className="text-[15px] text-white" />,
-      link: "https://www.instagram.com/gr8nepal/",
+      link: "https://www.instagram.com/gr8digitalsolutions/",
       svg: "/icons/GR8-Nepal-ig.webp",
     },
     {

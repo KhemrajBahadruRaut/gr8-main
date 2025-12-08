@@ -1,19 +1,30 @@
-    /** @type {import('next').NextConfig} */
-    const nextConfig: import('next').NextConfig = {
-        images: {
+/** @type {import('next').NextConfig} */
+const nextConfig: import("next").NextConfig = {
+
+  /** @type {import('next').NextConfig} */
+
+
+  output: 'export',
+  trailingSlash: true,
+
+  images: {
+     unoptimized: true,
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
       },
-      // Add other domains if needed
       {
-        protocol: 'https',
-        hostname: '**.unsplash.com',
+        protocol: "https",
+        hostname: "**.unsplash.com",
       },
     ],
+  
   },
-    };
+  
+  
+};
 
-    export default nextConfig;
+
+export default nextConfig;

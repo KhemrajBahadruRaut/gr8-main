@@ -110,13 +110,6 @@ export default function Portfolio  ()  {
           </div>
         </div>
       )}
-
-      <footer className="py-6 mt-12">
-        <p className="text-gray-500 mb-2 md:mb-0 text-center">
-          © {new Date().getFullYear()} All Rights Reserved. G R Eight Private
-          Limited
-        </p>
-      </footer>
     </div>
   );
 };

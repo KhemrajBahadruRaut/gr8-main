@@ -20,6 +20,28 @@ export default function AdminBlogPanel() {
     date: new Date().toISOString().split('T')[0],
     read_time: ''
   });
+  useEffect(() => {
+  const savedState = localStorage.getItem("admin_blog_state");
+  if (savedState) {
+    const parsed = JSON.parse(savedState);
+    setSearchTerm(parsed.searchTerm || "");
+    setShowModal(parsed.showModal || false);
+    setEditMode(parsed.editMode || false);
+    setFormData(parsed.formData || formData);
+  }
+}, []);
+useEffect(() => {
+  localStorage.setItem(
+    "admin_blog_state",
+    JSON.stringify({
+      searchTerm,
+      showModal,
+      editMode,
+      formData
+    })
+  );
+}, [searchTerm, showModal, editMode, formData]);
+
 
   const API_BASE_URL = "http://localhost/gr8/api/blogs";
 
@@ -171,21 +193,26 @@ export default function AdminBlogPanel() {
     }
   };
 
-  const resetForm = () => {
-    setFormData({
-      id: '',
-      title: '',
-      slug: '',
-      description: '',
-      content: '',
-      imageFile: null,
-      tags: '',
-      date: new Date().toISOString().split('T')[0],
-      read_time: ''
-    });
-    setEditMode(false);
-    setMessage({ type: '', text: '' });
+ const resetForm = () => {
+  const emptyForm = {
+    id: '',
+    title: '',
+    slug: '',
+    description: '',
+    content: '',
+    imageFile: null,
+    tags: '',
+    date: new Date().toISOString().split('T')[0],
+    read_time: ''
   };
+
+  setFormData(emptyForm);
+  setEditMode(false);
+  setMessage({ type: '', text: '' });
+
+  localStorage.removeItem("admin_blog_state");
+};
+
 
   const filteredBlogs = blogs.filter(blog =>
     blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

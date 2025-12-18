@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useCallback, lazy, Suspense } from "react";
+import React, { useState, useMemo, useCallback, lazy, Suspense, useEffect } from "react";
 import { 
   Menu, 
   FileText, 
@@ -15,6 +15,8 @@ import {
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+
+
 
 // Lazy load components for better performance
 const AdminBlogForm = lazy(() => import("../adminBlog/AdminBlogForm"))
@@ -46,7 +48,13 @@ const NAV_ITEMS = [
 
 const Admin_Main_Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState("contacts");
+  const [activeSection, setActiveSection] = useState(() => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("admin_active_section") || "contacts";
+  }
+  return "contacts";
+});
+
   const [notifications] = useState(0); // Mock notification count
 
   // Memoized sidebar classes
@@ -68,6 +76,10 @@ const Admin_Main_Page = () => {
         return AdminContactsPage;
     }
   }, [activeSection]);
+
+  useEffect(() => {
+  localStorage.setItem("admin_active_section", activeSection);
+}, [activeSection]);
 
   // Handle navigation with keyboard support
   const handleNavigation = useCallback((sectionId) => {

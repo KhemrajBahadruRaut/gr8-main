@@ -37,7 +37,7 @@
     "**/*.jsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "app/blogs/pagrtsx"  ],
   "exclude": [
     "node_modules",
     ".next" 

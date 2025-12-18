@@ -22,6 +22,7 @@ import {
   Shield,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const ValueCard = React.memo(({ icon: Icon, title, description, index }) => (
   <div
@@ -627,9 +628,9 @@ export default function AboutSection() {
               Join numerous clients who trust GR8 Private Limited for innovative
               digital solutions and exceptional property management services.
             </p>
-            <button className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
+            <Link href="/contact" className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
               Get In Touch
-            </button>
+            </Link>
           </div>
         </div>
       </div>

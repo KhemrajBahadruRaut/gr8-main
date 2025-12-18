@@ -26,13 +26,22 @@ export default function ContactPage() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+  try {
+    const res = await fetch("http://localhost/gr8/api/contact/post_contact.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
       setSubmitSuccess(true);
       setFormData({
         name: '',
@@ -42,11 +51,18 @@ export default function ContactPage() {
         message: ''
       });
 
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 3000);
-    }, 2000);
-  };
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    } else {
+      alert(data.message);
+    }
+
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const contactInfo = [
     {

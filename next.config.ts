@@ -4,10 +4,14 @@ const nextConfig: import("next").NextConfig = {
   // /** @type {import('next').NextConfig} */
 
 
-  output: 'export',
+  // output: 'export',
   trailingSlash: true,
 
   images: {
+    domains: [
+      "scontent.cdninstagram.com",
+      "instagram.fktm10-1.fna.fbcdn.net"
+    ],
      unoptimized: true,
     remotePatterns: [
       {

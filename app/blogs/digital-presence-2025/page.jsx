@@ -39,17 +39,6 @@ export default function DigitalPresence2025() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400">
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80"
-                  alt="Sarah Johnson"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold text-white">Sarah Johnson</p>
-                  <p className="text-sm">Digital Strategy Director</p>
-                </div>
-              </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
@@ -203,25 +192,6 @@ export default function DigitalPresence2025() {
             </section>
           </div>
 
-          {/* Author Bio */}
-          <section className="mt-16 p-8 bg-slate-800/30 rounded-2xl border border-slate-700/50">
-            <div className="flex items-center gap-6">
-              <img
-                src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&q=80"
-                alt="Sarah Johnson"
-                className="w-20 h-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-xl font-bold mb-2">About Sarah Johnson</h3>
-                <p className="text-gray-400 mb-3">Digital Strategy Director</p>
-                <p className="text-gray-300">
-                  Sarah is an expert in digital transformation with over 12 years of experience helping businesses 
-                  establish robust online presences. She has worked with Fortune 500 companies and startups alike, 
-                  specializing in digital strategy, customer engagement, and growth marketing.
-                </p>
-              </div>
-            </div>
-          </section>
         </article>
       </div>
     </div>

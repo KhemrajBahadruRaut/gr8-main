@@ -34,17 +34,6 @@ export default function OnlinePresenceGrowth() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400">
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80"
-                  alt="Mike Chen"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold text-white">Mike Chen</p>
-                  <p className="text-sm">Growth Marketing Expert</p>
-                </div>
-              </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
@@ -191,25 +180,6 @@ export default function OnlinePresenceGrowth() {
               </p>
             </section>
           </div>
-
-          <section className="mt-16 p-8 bg-slate-800/30 rounded-2xl border border-slate-700/50">
-            <div className="flex items-center gap-6">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80"
-                alt="Mike Chen"
-                className="w-20 h-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-xl font-bold mb-2">About Mike Chen</h3>
-                <p className="text-gray-400 mb-3">Growth Marketing Expert</p>
-                <p className="text-gray-300">
-                  Mike specializes in helping businesses scale their online presence through data-driven marketing strategies. 
-                  With 8 years of experience in digital marketing, he has helped over 50 companies achieve significant growth 
-                  through comprehensive online presence optimization.
-                </p>
-              </div>
-            </div>
-          </section>
         </article>
       </div>
     </div>

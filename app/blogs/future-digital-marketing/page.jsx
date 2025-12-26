@@ -37,17 +37,6 @@ export default function FutureDigitalMarketing() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-400">
-              <div className="flex items-center gap-4">
-                <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80"
-                  alt="Emily Rodriguez"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold text-white">Emily Rodriguez</p>
-                  <p className="text-sm">Marketing Technology Specialist</p>
-                </div>
-              </div>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-5 h-5" />
@@ -194,25 +183,6 @@ export default function FutureDigitalMarketing() {
               </p>
             </section>
           </div>
-
-          <section className="mt-16 p-8 bg-slate-800/30 rounded-2xl border border-slate-700/50">
-            <div className="flex items-center gap-6">
-              <img
-                src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80"
-                alt="Emily Rodriguez"
-                className="w-20 h-20 rounded-full"
-              />
-              <div>
-                <h3 className="text-xl font-bold mb-2">About Emily Rodriguez</h3>
-                <p className="text-gray-400 mb-3">Marketing Technology Specialist</p>
-                <p className="text-gray-300">
-                  Emily is at the forefront of marketing technology innovation, with a focus on emerging trends and 
-                  their practical applications. She has helped numerous brands implement cutting-edge marketing strategies 
-                  and stays passionate about the intersection of technology and human connection.
-                </p>
-              </div>
-            </div>
-          </section>
         </article>
       </div>
     </div>

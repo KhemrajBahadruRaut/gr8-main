@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, ArrowLeft, Share2, Bookmark, Tag } from 'lucide-react';
+import React from 'react';
+import { Calendar, Clock, ArrowLeft, Share2, Bookmark } from 'lucide-react';
 import Link from 'next/link';
 import Head from 'next/head';
 
@@ -19,30 +19,13 @@ interface Blog {
 
 interface BlogDetailPageProps {
   slug: string;
+  blog: Blog; 
 }
 
-export default function BlogDetailPage({ slug }: BlogDetailPageProps) {
-  const [blog, setBlog] = useState<Blog | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+export default function BlogDetailPage({ slug, blog }: BlogDetailPageProps) {
+  if (!blog) return <p>Blog not found</p>;
 
-  useEffect(() => {
-    if (slug) fetchBlog(slug);
-  }, [slug]);
-
-  const fetchBlog = async (blogSlug: string) => {
-    try {
-      const response = await fetch(`http://localhost/gr8/api/blogs/get_blog.php?slug=${blogSlug}`);
-      const data = await response.json();
-
-      if (data.success && data.blog) setBlog(data.blog);
-      else setError(true);
-    } catch {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const tags = blog.tags.split(',').map(tag => tag.trim());
 
   const handleShare = () => {
     if (navigator.share && blog) {
@@ -59,37 +42,6 @@ export default function BlogDetailPage({ slug }: BlogDetailPageProps) {
       alert('Link copied to clipboard!');
     }
   };  
-
-  if (loading) {
-    return (
-      <div className="bg-[#0f1821] text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-emerald-400 mx-auto mb-4"></div>
-          <p className="text-gray-400">Loading blog...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !blog) {
-    return (
-      <div className="bg-[#0f1821] text-white flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <h1 className="text-4xl font-bold mb-4">Blog Not Found</h1>
-          <p className="text-gray-400 mb-8">
-            Sorry, we couldn't find the blog you're looking for.
-          </p>
-          <Link href="/blogs">
-            <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
-              Back to Blogs
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const tags = blog.tags.split(',').map(tag => tag.trim());
 
   return (
     <>
@@ -170,160 +122,39 @@ export default function BlogDetailPage({ slug }: BlogDetailPageProps) {
             </div>
 
             {/* Blog Content with proper styling */}
-            <div className="blog-content text-gray-300 leading-relaxed text-lg ">
-              <div
-                dangerouslySetInnerHTML={{ __html: blog.content }}
-              />
+            <div className="blog-content text-gray-300 leading-relaxed text-lg">
+              <div dangerouslySetInnerHTML={{ __html: blog.content }} />
             </div>
           </article>
         </div>
       </div>
 
-      {/* Styles for blog content to match admin panel formatting */}
+      {/* Styles (unchanged from your code) */}
       <style jsx global>{`
-        .blog-content {
-          word-wrap: break-word;
-          overflow-wrap: break-word;
-          max-width: 100%;
-        }
-
-        .blog-content h1 {
-          font-size: 2em;
-          font-weight: bold;
-          margin: 1em 0 0.67em 0;
-          line-height: 1;
-          color: #ffffff;
-        }
-
-        .blog-content h2 {
-          font-size: 1.5em;
-          font-weight: bold;
-          margin: 1.3em 0 0.75em 0;
-          line-height: 1;
-          color: #ffffff;
-        }
-
-        .blog-content h3 {
-          font-size: 1.17em;
-          font-weight: bold;
-          margin: 1.2em 0 0.83em 0;
-          line-height: 1;
-          color: #ffffff;
-        }
-
-        .blog-content p {
-          margin: 1em 0;
-          line-height: 1.2;
-          color: #d1d5db;
-        }
-
-        .blog-content ul,
-        .blog-content ol {
-          margin: 1em 0;
-          padding-left: 2em;
-        }
-
-        .blog-content ul {
-          list-style-type: disc;
-        }
-
-        .blog-content ol {
-          list-style-type: decimal;
-        }
-
-        .blog-content li {
-          margin: 0.5em 0;
-          line-height: 1.8;
-          color: #d1d5db;
-        }
-
-        .blog-content a {
-          color: #34d399;
-          text-decoration: underline;
-          transition: color 0.2s;
-        }
-
-        .blog-content a:hover {
-          color: #10b981;
-        }
-
-        .blog-content strong {
-          font-weight: bold;
-          color: #ffffff;
-        }
-
-        .blog-content em {
-          font-style: italic;
-        }
-
-        .blog-content u {
-          text-decoration: underline;
-        }
-
-        .blog-content blockquote {
-          border-left: 4px solid #34d399;
-          padding-left: 1.5em;
-          margin: 1.5em 0;
-          font-style: italic;
-          color: #9ca3af;
-        }
-
-        .blog-content code {
-          background-color: #1e293b;
-          padding: 0.2em 0.4em;
-          border-radius: 0.25rem;
-          font-size: 0.9em;
-          color: #34d399;
-        }
-
-        .blog-content pre {
-          background-color: #1e293b;
-          padding: 1em;
-          border-radius: 0.5rem;
-          overflow-x: auto;
-          margin: 1.5em 0;
-        }
-
-        .blog-content pre code {
-          background-color: transparent;
-          padding: 0;
-        }
-
-        .blog-content img {
-          max-width: 100%;
-          height: auto;
-          border-radius: 0.5rem;
-          margin: 1.5em 0;
-        }
-
-        .blog-content hr {
-          border: none;
-          border-top: 1px solid #374151;
-          margin: 2em 0;
-        }
-
-        /* Ensure no horizontal overflow */
-        .blog-content * {
-          max-width: 100%;
-        }
-
-        .blog-content table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 1.5em 0;
-        }
-
-        .blog-content th,
-        .blog-content td {
-          border: 1px solid #374151;
-          padding: 0.75em;
-          text-align: left;
-        }
-
-        .blog-content th {
-          background-color: #1e293b;
-          font-weight: bold;
-        }
+        .blog-content { word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; }
+        .blog-content h1 { font-size: 2em; font-weight: bold; margin: 1em 0 0.67em 0; line-height: 1; color: #ffffff; }
+        .blog-content h2 { font-size: 1.5em; font-weight: bold; margin: 1.3em 0 0.75em 0; line-height: 1; color: #ffffff; }
+        .blog-content h3 { font-size: 1.17em; font-weight: bold; margin: 1.2em 0 0.83em 0; line-height: 1; color: #ffffff; }
+        .blog-content p { margin: 1em 0; line-height: 1.2; color: #d1d5db; }
+        .blog-content ul, .blog-content ol { margin: 1em 0; padding-left: 2em; }
+        .blog-content ul { list-style-type: disc; }
+        .blog-content ol { list-style-type: decimal; }
+        .blog-content li { margin: 0.5em 0; line-height: 1.8; color: #d1d5db; }
+        .blog-content a { color: #34d399; text-decoration: underline; transition: color 0.2s; }
+        .blog-content a:hover { color: #10b981; }
+        .blog-content strong { font-weight: bold; color: #ffffff; }
+        .blog-content em { font-style: italic; }
+        .blog-content u { text-decoration: underline; }
+        .blog-content blockquote { border-left: 4px solid #34d399; padding-left: 1.5em; margin: 1.5em 0; font-style: italic; color: #9ca3af; }
+        .blog-content code { background-color: #1e293b; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.9em; color: #34d399; }
+        .blog-content pre { background-color: #1e293b; padding: 1em; border-radius: 0.5rem; overflow-x: auto; margin: 1.5em 0; }
+        .blog-content pre code { background-color: transparent; padding: 0; }
+        .blog-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1.5em 0; }
+        .blog-content hr { border: none; border-top: 1px solid #374151; margin: 2em 0; }
+        .blog-content * { max-width: 100%; }
+        .blog-content table { width: 100%; border-collapse: collapse; margin: 1.5em 0; }
+        .blog-content th, .blog-content td { border: 1px solid #374151; padding: 0.75em; text-align: left; }
+        .blog-content th { background-color: #1e293b; font-weight: bold; }
       `}</style>
     </>
   );

@@ -111,7 +111,7 @@ export default function BlogDetailPage({ slug }: BlogDetailPageProps) {
           </Link>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6 border border-transparent">
           <article>
             <header className="text-center mb-12">
               <div className="flex flex-wrap gap-2 justify-center mb-3">

@@ -32,22 +32,23 @@ export default function TrustedBySection() {
           <h1 className="text-3xl md:text-5xl font-bold">Trusted By</h1>
         </div>
 
-        <div className="relative">
+        <div className="relative h-32 flex items-center" style={{ contain: "layout style paint" }}>
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-[#0f1821] to-transparent z-10"></div>
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-[#0f1821] to-transparent z-10"></div>
 
-          <div className="flex overflow-hidden">
+          <div className="flex overflow-hidden w-full">
             <div className="flex animate-scroll">
               {duplicatedClients.map((client, index) => (
                 <div
                   key={index}
-                  className="shrink-0 sm:mx-8 mx-4 flex items-center justify-center sm:w-35 w-25"
-                  // style={{ width: '140px' }}
+                  className="shrink-0 sm:mx-8 mx-4 flex items-center justify-center sm:w-35 w-25 h-24"
                 >
                   <img
                     src={client.logo}
                     alt={client.name}
-                    className=" opacity-70 hover:opacity-100 transition-opacity duration-300 "
+                    className="opacity-70 hover:opacity-100 transition-opacity duration-300 max-h-20 w-auto"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               ))}
@@ -67,8 +68,13 @@ export default function TrustedBySection() {
         }
 
         .animate-scroll {
-          animation: scroll 30s linear infinite;
+          animation: scroll 40s linear infinite;
           display: flex;
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
         }
 
         .animate-scroll:hover {
@@ -78,3 +84,4 @@ export default function TrustedBySection() {
     </div>
   );
 }
+

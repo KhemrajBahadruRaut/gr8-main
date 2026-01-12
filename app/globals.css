@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+/* Smooth scrolling configuration */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations - prevent stutter */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Page transition smoothing */
+main {
+  will-change: auto;
+}
+
 button.learn-more {
  position: relative;
  display: inline-block;

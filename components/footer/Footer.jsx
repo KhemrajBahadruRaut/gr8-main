@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Footer = () => {
-   const footerData = {
+  const footerData = {
     company: {
       title: "COMPANY",
       links: [
@@ -10,8 +10,8 @@ const Footer = () => {
         { label: "Portfolio", href: "#" },
         { label: "Merchandise", href: "#" },
         { label: "Careers", href: "/careers" },
-        { label: "Contact Us", href: "/contact" }
-      ]
+        { label: "Contact Us", href: "/contact" },
+      ],
     },
     services: {
       title: "SERVICES",
@@ -20,12 +20,21 @@ const Footer = () => {
         { label: "App Development", href: "/services/mobile-app-development" },
         { label: "Graphics Designing", href: "/services/graphics-designing" },
         { label: "Email Marketing", href: "/services/email-marketing" },
-        { label: "Search Engine Optimization (SEO)", href: "/services/seo-services" },
-        { label: "Social Media Marketing", href: "/services/social-media-marketing" },
-        { label: "Printing and Publishing", href: "/services/printing-publishing" },
+        {
+          label: "Search Engine Optimization (SEO)",
+          href: "/services/seo-services",
+        },
+        {
+          label: "Social Media Marketing",
+          href: "/services/social-media-marketing",
+        },
+        {
+          label: "Printing and Publishing",
+          href: "/services/printing-publishing",
+        },
         { label: "Pay-Per-Click", href: "/services/pay-per-click" },
-        { label: "Content writing", href: "/services/content-writing" }
-      ]
+        { label: "Content writing", href: "/services/content-writing" },
+      ],
     },
     resources: {
       title: "RESOURCES",
@@ -33,16 +42,16 @@ const Footer = () => {
         { label: "Blog", href: "/blogs" },
         { label: "Portfolio", href: "/portfolio" },
         { label: "Merchendise", href: "/merchendise" },
-        { label: "Contact Us", href: "/contact" }
-      ]
+        { label: "Contact Us", href: "/contact" },
+      ],
     },
     additionals: {
       title: "ADDITIONALS",
       links: [
         { label: "Terms & Conditions", href: "/terms-and-condition" },
-        { label: "Privacy Policy", href: "/privacy" }
-      ]
-    }
+        { label: "Privacy Policy", href: "/privacy" },
+      ],
+    },
   };
   return (
     <footer className="bg-[#101820] text-gray-300">
@@ -129,12 +138,13 @@ const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-slate-700/50 pt-8">
           <p className="text-center text-gray-500 text-sm">
-            © 2025 All Rights Reserved. G R Eight Private Limited
+            © {new Date().getFullYear()} All Rights Reserved. G R Eight Private
+            Limited
           </p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

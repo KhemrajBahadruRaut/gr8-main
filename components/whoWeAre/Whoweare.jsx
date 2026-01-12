@@ -44,7 +44,7 @@ const ValueItem = ({ title, description, gradient, delay = 0 }) => {
       transition={{ duration: 0.8, delay, ease: "easeOut" }}
     >
       <motion.h3 
-        className="text-lg sm:text-2xl font-semibold mb-2 whitespace-nowrap bg-clip-text text-transparent min-w-[140px]"
+        className="text-lg sm:text-2xl font-semibold mb-2 whitespace-nowrap bg-clip-text text-transparent min-w-35"
         style={{ 
           backgroundImage: gradient 
         }}
@@ -83,7 +83,7 @@ const Whoweare = () => {
     },
     {
       title: "Our Vision",
-      description: "TTo be a leading digital solutions provider, transforming how businesses engage, connect, and succeed online through technology, creativity, and strategic innovation.",
+      description: "To be a leading digital solutions provider, transforming how businesses engage, connect, and succeed online through technology, creativity, and strategic innovation.",
       gradient: "linear-gradient(135deg, #B32723 0%, #E06666 100%)"
     },
     {

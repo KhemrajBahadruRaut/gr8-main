@@ -46,6 +46,7 @@ export default function BlogsPage() {
   const fetchBlogs = async () => {
     try {
       const response = await fetch('http://localhost/gr8/api/blogs/get_blog.php');
+      // const response = await fetch('https://gr8.com.np/gr8/api/blogs/get_blog.php');
       const data = await response.json();
       
       if (data.success) {

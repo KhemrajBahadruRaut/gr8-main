@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Image from "next/image"; // ✅ IMPORTANT FIX
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Maximize2 } from "lucide-react"; // Optional: npm install lucide-react
 
 // Image imports
 import bank1 from "./banking/GR8-Nepal-bank1.png";
@@ -46,7 +48,7 @@ const allProjects = [
   { category: "Travel", image: travel6 },
 ];
 
-export default function Portfolio  ()  {
+export default function Portfolio() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [modalImage, setModalImage] = useState(null);
 
@@ -65,52 +67,104 @@ export default function Portfolio  ()  {
   }, []);
 
   return (
-    <div className="bg-[#101820] pt-25">
-      <div className="max-w-6xl mx-auto px-4">
-        <PortfolioNav
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-        />
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <div
-              key={index}
-              className="overflow-hidden rounded-lg shadow-lg cursor-pointer"
-              onClick={() => setModalImage(project.image)}
-            >
-              {/* 🔥 FIX: Next.js Image with caching disabled */}
-              <Image
-                src={project.image}
-                alt={project.category}
-                unoptimized
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-          ))}
+    <section className="min-h-screen bg-[#0B1118] py-20 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          {/* <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            Our Creative <span className="text-blue-500">Portfolio</span>
+          </h2> */}
+          {/* <div className="h-1 w-20 bg-blue-500 mx-auto rounded-full mb-8" /> */}
+          
+          <PortfolioNav
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+          />
         </div>
+
+        {/* Portfolio Grid */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                key={`${project.category}-${index}`}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="group relative overflow-hidden rounded-2xl bg-gray-900 aspect-4/3 cursor-pointer"
+                onClick={() => setModalImage(project.image)}
+              >
+                {/* Image Component */}
+                <Image
+                  src={project.image}
+                  alt={project.category}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  placeholder="blur" // If using local imports, this adds a nice blur-up
+                />
+
+                {/* Overlays */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                  <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <p className="text-blue-400 text-sm font-medium uppercase tracking-widest mb-1">
+                      {project.category}
+                    </p>
+                    <h3 className="text-white text-xl font-semibold">View Case Study</h3>
+                  </div>
+                </div>
+                
+                {/* Centered Icon on Hover */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                   <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20">
+                      <Maximize2 className="text-white w-6 h-6" />
+                   </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      {/* Modal */}
-      {modalImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center"
-          onClick={() => setModalImage(null)}
-        >
-          <div
-            className="max-w-3xl w-full px-4"
-            onClick={(e) => e.stopPropagation()}
+      {/* Modern Lightbox Modal */}
+      <AnimatePresence>
+        {modalImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-100 bg-black/95 backdrop-blur-sm flex justify-center items-center p-4 md:p-10"
+            onClick={() => setModalImage(null)}
           >
-            <Image
-              src={modalImage}
-              alt="Enlarged portfolio"
-              unoptimized
-              className="w-full h-auto rounded-lg"
-            />
-          </div>
-        </div>
-      )}
-    </div>
+            <button 
+              className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
+              onClick={() => setModalImage(null)}
+            >
+              <X size={40} strokeWidth={1.5} />
+            </button>
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-2xl w-full max-h-screen flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={modalImage}
+                alt="Enlarged portfolio"
+                className="w-auto h-auto max-w-full max-h-full rounded-xl shadow-2xl object-contain"
+                priority
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
-};
+}
 

@@ -65,7 +65,7 @@ const Admin_Main_Page = () => {
   const fetchNotifications = useCallback(async () => {
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/get_applications.php');
-      const res = await fetch('https://gr8.com.np/gr8/api/applications/get_applications.php');
+      const res = await fetch('https://api.gr8.com.np/gr8/api/applications/get_applications.php');
       const data = await res.json();
       if (data.success) {
         setNotifications(data.unread_count || 0);
@@ -87,7 +87,7 @@ const Admin_Main_Page = () => {
   const handleMarkAllRead = async () => {
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/mark_read.php', {
-      const res = await fetch('https://gr8.com.np/gr8/api/applications/mark_read.php', {
+      const res = await fetch('https://api.gr8.com.np/gr8/api/applications/mark_read.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mark_all: true })

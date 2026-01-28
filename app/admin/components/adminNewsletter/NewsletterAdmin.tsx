@@ -55,7 +55,8 @@ const NewsletterAdmin: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("http://localhost/gr8/api/newsletter/get_subscriber.php");
+      // const res = await fetch("http://localhost/gr8/api/newsletter/get_subscriber.php");
+      const res = await fetch("https://gr8.com.np/gr8/api/newsletter/get_subscriber.php");
       if (!res.ok) {
         throw new Error(`Failed to fetch: ${res.status}`);
       }
@@ -91,7 +92,8 @@ const NewsletterAdmin: React.FC = () => {
     
     try {
       const res = await fetch(
-        `http://localhost/gr8/api/newsletter/delete_subscriber.php?id=${id}`,
+        // `http://localhost/gr8/api/newsletter/delete_subscriber.php?id=${id}`,
+        `https://gr8.com.np/gr8/api/newsletter/delete_subscriber.php?id=${id}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("Failed to delete");

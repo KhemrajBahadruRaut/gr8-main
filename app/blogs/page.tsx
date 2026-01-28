@@ -22,7 +22,8 @@ export async function generateMetadata(
 
   // Fetch blog data for SEO
   try {
-    const res = await fetch(`http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`);
+    // const res = await fetch(`http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`);
+    const res = await fetch(`https://gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`);
     const data = await res.json();
 
     if (data.success && data.blog) {

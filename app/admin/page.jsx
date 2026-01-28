@@ -12,7 +12,8 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost/gr8/api/auth/check.php", {
+        // const res = await fetch("http://localhost/gr8/api/auth/check.php", {
+        const res = await fetch("https://gr8.com.np/gr8/api/auth/check.php", {
           credentials: "include",
         });
 

@@ -68,8 +68,8 @@ function BlogsContent() {
   const fetchBlogs = async () => {
     try {
       const res = await fetch(
-        // "https://ridimatuladhar.com.np/gr8/api/blogs/get_blog.php"
-        "http://localhost/gr8/api/blogs/get_blog.php"
+        // "http://localhost/gr8/api/blogs/get_blog.php"
+        "https://gr8.com.np/gr8/api/blogs/get_blog.php"
       );
       const data = await res.json();
 
@@ -87,8 +87,8 @@ function BlogsContent() {
   const fetchSingleBlog = async (slug: string) => {
     try {
       const res = await fetch(
-        // `https://ridimatuladhar.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`
-        `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`
+        // `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`
+        `https://gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`
       );
       const data = await res.json();
 

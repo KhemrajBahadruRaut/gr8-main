@@ -23,8 +23,8 @@ const Newsletter = () => {
 
     try {
       const res = await fetch(
-        // "https://gr8.com.np/api/newsletter/subscribe.php",
-        "http://localhost/gr8/api/newsletter/newsletter-subscriber.php",
+        // "http://localhost/gr8/api/newsletter/newsletter-subscriber.php",
+        "https://gr8.com.np/gr8/api/newsletter/newsletter-subscriber.php",
         {
           method: "POST",
           headers: {

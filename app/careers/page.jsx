@@ -38,8 +38,8 @@ export default function CareersPage() {
   const fetchJobs = async () => {
     try {
       const res = await fetch(
-        // "https://ridimatuladhar.com.np/gr8/api/careers/get_careers.php"
-        "http://localhost/gr8/api/careers/get_careers.php"
+        // "http://localhost/gr8/api/careers/get_careers.php"
+        "https://gr8.com.np/gr8/api/careers/get_careers.php"
       );
       const data = await res.json();
       if (data.success) {
@@ -137,8 +137,8 @@ export default function CareersPage() {
       }
 
       const response = await fetch(
-        // "https://ridimatuladhar.com.np/gr8/api/applications/submit_application.php"
-        "http://localhost/gr8/api/applications/submit_application.php",
+        // "http://localhost/gr8/api/applications/submit_application.php",
+        "https://gr8.com.np/gr8/api/applications/submit_application.php",
         {
           method: 'POST',
           body: formDataToSend

@@ -88,7 +88,8 @@ export default function AdminContactsPage() {
   const fetchContacts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost/gr8/api/contact/get_contacts.php");
+      // const response = await fetch("http://localhost/gr8/api/contact/get_contacts.php");
+      const response = await fetch("https://gr8.com.np/gr8/api/contact/get_contacts.php");
       const data = await response.json();
       if (data.success) {
         setContacts(data.data);

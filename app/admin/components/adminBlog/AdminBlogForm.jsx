@@ -23,7 +23,7 @@ export default function AdminBlogPanel() {
   });
 
   // const API_BASE_URL = "http://localhost/gr8/api/blogs";
-  const API_BASE_URL = "https://gr8.com.np/gr8/api/blogs";
+  const API_BASE_URL = "https://api.gr8.com.np/gr8/api/blogs";
 
   useEffect(() => {
     fetchBlogs();

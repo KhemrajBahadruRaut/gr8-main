@@ -106,7 +106,7 @@ const Admin_Main_Page = () => {
     if (!confirm('Delete this notification?')) return;
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/delete_application.php', {
-      const res = await fetch('https://gr8.com.np/gr8/api/applications/delete_application.php', {
+      const res = await fetch('https://api.gr8.com.np/gr8/api/applications/delete_application.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })

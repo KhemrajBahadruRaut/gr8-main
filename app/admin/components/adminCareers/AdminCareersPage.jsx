@@ -26,9 +26,9 @@ export default function AdminCareersPage() {
   });
 
   // const CAREERS_API = "http://localhost/gr8/api/careers";
-  const CAREERS_API = "https://gr8.com.np/gr8/api/careers";
+  const CAREERS_API = "https://api.gr8.com.np/gr8/api/careers";
   // const APPLICATIONS_API = "http://localhost/gr8/api/applications";
-  const APPLICATIONS_API = "https://gr8.com.np/gr8/api/applications";
+  const APPLICATIONS_API = "https://api.gr8.com.np/gr8/api/applications";
 
   useEffect(() => {
     fetchCareers();

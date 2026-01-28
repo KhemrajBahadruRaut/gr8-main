@@ -69,7 +69,7 @@ function BlogsContent() {
     try {
       const res = await fetch(
         // "http://localhost/gr8/api/blogs/get_blog.php"
-        "https://gr8.com.np/gr8/api/blogs/get_blog.php"
+        "https://api.gr8.com.np/gr8/api/blogs/get_blog.php"
       );
       const data = await res.json();
 
@@ -88,7 +88,7 @@ function BlogsContent() {
     try {
       const res = await fetch(
         // `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`
-        `https://gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`
+        `https://api.gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`
       );
       const data = await res.json();
 

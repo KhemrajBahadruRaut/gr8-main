@@ -23,7 +23,7 @@ export default function Login() {
 
     try {
       // const res = await fetch("http://localhost/gr8/api/auth/login.php", {
-      const res = await fetch("https://gr8.com.np/gr8/api/auth/login.php", {
+      const res = await fetch("https://api.gr8.com.np/gr8/api/auth/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -39,7 +39,7 @@ export default function CareersPage() {
     try {
       const res = await fetch(
         // "http://localhost/gr8/api/careers/get_careers.php"
-        "https://gr8.com.np/gr8/api/careers/get_careers.php"
+        "https://api.gr8.com.np/gr8/api/careers/get_careers.php"
       );
       const data = await res.json();
       if (data.success) {
@@ -138,7 +138,7 @@ export default function CareersPage() {
 
       const response = await fetch(
         // "http://localhost/gr8/api/applications/submit_application.php",
-        "https://gr8.com.np/gr8/api/applications/submit_application.php",
+        "https://api.gr8.com.np/gr8/api/applications/submit_application.php",
         {
           method: 'POST',
           body: formDataToSend

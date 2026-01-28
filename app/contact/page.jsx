@@ -32,7 +32,7 @@ const handleSubmit = async (e) => {
 
   try {
     // const res = await fetch("http://localhost/gr8/api/contact/post_contact.php", {
-    const res = await fetch("https://gr8.com.np/gr8/api/contact/post_contact.php", {
+    const res = await fetch("https://api.gr8.com.np/gr8/api/contact/post_contact.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

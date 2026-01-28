@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Calendar, Clock, ArrowLeft, Search, Share2, Bookmark } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -23,9 +23,19 @@ interface Blog {
   created_at?: string;
 }
 
-export default function BlogsPage() {
+// Loading component for Suspense fallback
+function BlogsLoading() {
+  return (
+    <div className="bg-[#0f1821] text-white min-h-screen flex items-center justify-center">
+      Loading...
+    </div>
+  );
+}
+
+// Main component that uses useSearchParams
+function BlogsContent() {
   const searchParams = useSearchParams();
-  const blogId = searchParams.get("id");
+  const blogSlug = searchParams.get("slug");
 
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([]);
@@ -34,12 +44,12 @@ export default function BlogsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (blogId) {
-      fetchSingleBlog(blogId);
+    if (blogSlug) {
+      fetchSingleBlog(blogSlug);
     } else {
       fetchBlogs();
     }
-  }, [blogId]);
+  }, [blogSlug]);
 
   useEffect(() => {
     if (!searchTerm.trim()) {
@@ -74,11 +84,11 @@ export default function BlogsPage() {
     }
   };
 
-  const fetchSingleBlog = async (id: string) => {
+  const fetchSingleBlog = async (slug: string) => {
     try {
       const res = await fetch(
-        // `https://ridimatuladhar.com.np/gr8/api/blogs/get_blog.php?id=${id}`
-        `http://localhost/gr8/api/blogs/get_blog.php?id=${id}`
+        // `https://ridimatuladhar.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`
+        `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`
       );
       const data = await res.json();
 
@@ -123,7 +133,7 @@ export default function BlogsPage() {
   }
 
   // Show single blog detail view
-  if (blogId && selectedBlog) {
+  if (blogSlug && selectedBlog) {
     const tags = selectedBlog.tags.split(',').map(tag => tag.trim());
 
     return (
@@ -236,7 +246,7 @@ export default function BlogsPage() {
   }
 
   // Show blog not found if ID provided but no blog found
-  if (blogId && !selectedBlog) {
+  if (blogSlug && !selectedBlog) {
     return (
       <div className="bg-[#0f1821] text-white min-h-screen flex flex-col items-center justify-center">
         <p className="text-xl mb-4">Blog not found</p>
@@ -290,7 +300,7 @@ export default function BlogsPage() {
             return (
               <Link
                 key={blog.id}
-                href={`/blogs?id=${blog.id}`}
+                href={`/blogs?slug=${blog.slug}`}
                 className="group"
               >
                 <div className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden h-full flex flex-col">
@@ -338,5 +348,14 @@ export default function BlogsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Default export wrapped in Suspense for SSR compatibility
+export default function BlogsPage() {
+  return (
+    <Suspense fallback={<BlogsLoading />}>
+      <BlogsContent />
+    </Suspense>
   );
 }

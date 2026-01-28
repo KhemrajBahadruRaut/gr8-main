@@ -2,8 +2,8 @@
 const nextConfig: import("next").NextConfig = {
 
 
-  // output: 'export',
-  output: 'standalone',
+  output: 'export',
+  // output: 'standalone',
   trailingSlash: true,
 images: {
     unoptimized: true,

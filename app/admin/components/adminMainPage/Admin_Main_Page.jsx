@@ -10,7 +10,8 @@ import {
   HelpCircle, 
   ChevronRight, 
   Shield,
-  Mail
+  Mail,
+  Briefcase
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,6 +23,7 @@ import { useRouter } from "next/navigation";
 const AdminBlogForm = lazy(() => import("../adminBlog/AdminBlogForm"))
 const AdminContactsPage = lazy(() => import("../adminContacts/AdminContactsPage"));
 const AdminSubscribersPage = lazy(() => import("../adminNewsletter/NewsletterAdmin"));
+const AdminCareersPage = lazy(() => import("../adminCareers/AdminCareersPage"));
 
 // Loading component for lazy loading
 const LoadingFallback = () => (
@@ -43,7 +45,7 @@ const NAV_ITEMS = [
   { id: "blogs", label: "Blogs", icon: FileText, color: "emerald" },
   { id: "contacts", label: "Contacts", icon: Contact, color: "blue" },
   { id: "subscribers", label: "Subscribers", icon: Mail, color: "purple" },
-
+  { id: "careers", label: "Careers", icon: Briefcase, color: "orange" },
 ];
 
 const Admin_Main_Page = () => {
@@ -55,7 +57,69 @@ const Admin_Main_Page = () => {
   return "contacts";
 });
 
-  const [notifications] = useState(0); // Mock notification count
+  const [notifications, setNotifications] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [recentAlerts, setRecentAlerts] = useState([]);
+
+  // Fetch unread applications count and list
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await fetch('http://localhost/gr8/api/applications/get_applications.php');
+      const data = await res.json();
+      if (data.success) {
+        setNotifications(data.unread_count || 0);
+        // Filter unread or just take the top 5 most recent
+        setRecentAlerts(data.applications.filter(app => app.is_read == 0).slice(0, 5));
+      }
+    } catch (err) {
+      console.error('Error fetching notifications:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
+
+  const handleMarkAllRead = async () => {
+    try {
+      const res = await fetch('http://localhost/gr8/api/applications/mark_read.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mark_all: true })
+      });
+      if (res.ok) {
+        fetchNotifications();
+        setShowNotifications(false);
+      }
+    } catch (error) {
+      console.error('Error marking all as read', error);
+    }
+  };
+
+  const handleDeleteNotification = async (e, id) => {
+    e.stopPropagation();
+    if (!confirm('Delete this notification?')) return;
+    try {
+      const res = await fetch('http://localhost/gr8/api/applications/delete_application.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+      if (res.ok) {
+        fetchNotifications();
+      }
+    } catch (error) {
+      console.error('Error deleting notification', error);
+    }
+  };
+
+  const handleNotificationClick = () => {
+    setActiveSection('careers');
+    setShowNotifications(false);
+  };
 
   // Memoized sidebar classes
   const sidebarClasses = useMemo(() => 
@@ -72,6 +136,8 @@ const Admin_Main_Page = () => {
         return AdminContactsPage;
       case "subscribers":
         return AdminSubscribersPage;
+      case "careers":
+        return AdminCareersPage;
       default:
         return AdminContactsPage;
     }
@@ -261,7 +327,7 @@ const handleLogout = async () => {
                       className="ml-auto w-2 h-2 bg-white rounded-full"
                     />
                   )}
-                  {sidebarOpen && item.id === "contacts" && notifications > 0 && (
+                  {sidebarOpen && item.id === "careers" && notifications > 0 && (
                     <span className="ml-auto px-2 py-1 bg-red-500 text-white text-xs rounded-full min-w-5 text-center">
                       {notifications}
                     </span>
@@ -367,8 +433,11 @@ const handleLogout = async () => {
               <span className="text-gray-600">Dashboard</span>
             </div>
             
-            <div className="flex items-center gap-4">
-              <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <div className="flex items-center gap-4 relative">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
                 <Bell className="w-5 h-5" />
                 {notifications > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
@@ -376,6 +445,74 @@ const handleLogout = async () => {
                   </span>
                 )}
               </button>
+
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-12 right-0 w-80 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50"
+                  >
+                    <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                      {notifications > 0 && (
+                        <button 
+                          onClick={handleMarkAllRead}
+                          className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                        >
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {recentAlerts.length > 0 ? (
+                        recentAlerts.map((alert) => (
+                          <div 
+                            key={alert.id}
+                            onClick={handleNotificationClick}
+                            className="p-4 hover:bg-gray-50 border-b border-gray-100 last:border-0 cursor-pointer group transition-colors"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                  <Briefcase className="w-4 h-4" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-900">{alert.name}</p>
+                                  <p className="text-xs text-gray-500 line-clamp-1">Applied for {alert.job_title || 'Application'}</p>
+                                  <p className="text-xs text-gray-400 mt-1">{new Date(alert.created_at).toLocaleDateString()}</p>
+                                </div>
+                              </div>
+                              <button 
+                                onClick={(e) => handleDeleteNotification(e, alert.id)}
+                                className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all p-1"
+                                title="Delete"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-8 text-center text-gray-500">
+                          <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
+                          <p className="text-sm">No new notifications</p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-2 bg-gray-50 text-center">
+                      <button 
+                        onClick={handleNotificationClick}
+                        className="text-xs text-gray-600 hover:text-gray-900 font-medium"
+                      >
+                        View All Applications
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="w-8 h-8 bg-linear-to-r from-emerald-500 to-blue-500 rounded-full"></div>
             </div>
           </div>

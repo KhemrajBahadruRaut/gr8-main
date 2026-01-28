@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { 
   Briefcase, MapPin, Clock, DollarSign, Users, 
@@ -20,6 +20,8 @@ export default function CareersPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const heroRef = useRef(null);
   const benefitsRef = useRef(null);
@@ -29,92 +31,26 @@ export default function CareersPage() {
   const benefitsInView = useInView(benefitsRef, { once: true, threshold: 0.2 });
   const jobsInView = useInView(jobsRef, { once: true, threshold: 0.1 });
 
-  const jobs = [
-    {
-      id: 1,
-      title: 'Senior Full Stack Developer',
-      department: 'Engineering',
-      location: 'Kathmandu, Nepal',
-      type: 'Full-time',
-      salary: 'NRP 50k - NRP 70k',
-      description: 'We are looking for an experienced Full Stack Developer to join our growing team. You will work on cutting-edge projects and help build scalable web applications.',
-      requirements: [
-        '5+ years of experience in full-stack development',
-        'Proficiency in React, Node.js, and modern JavaScript',
-        'Experience with database design and optimization',
-        'Strong problem-solving skills'
-      ],
-      responsibilities: [
-        'Develop and maintain web applications',
-        'Collaborate with cross-functional teams',
-        'Write clean, maintainable code',
-        'Participate in code reviews'
-      ]
-    },
-    {
-      id: 2,
-      title: 'UI/UX Designer',
-      department: 'Design',
-      location: 'Kathmandu, Nepal',
-      type: 'Full-time',
-      salary: 'NRP 40k - NRP 60k',
-      description: 'Join our design team to create beautiful, user-friendly interfaces. You will work closely with developers and product managers to bring designs to life.',
-      requirements: [
-        '3+ years of UI/UX design experience',
-        'Proficiency in Figma, Adobe XD, or Sketch',
-        'Strong portfolio showcasing your work',
-        'Understanding of user-centered design principles'
-      ],
-      responsibilities: [
-        'Create wireframes and prototypes',
-        'Design intuitive user interfaces',
-        'Conduct user research and testing',
-        'Collaborate with development team'
-      ]
-    },
-    {
-      id: 3,
-      title: 'Digital Marketing Specialist',
-      department: 'Marketing',
-      location: 'Remote',
-      type: 'Full-time',
-      salary: 'NRP 35k - NRP 50k',
-      description: 'We need a creative digital marketing specialist to drive our online presence and help us reach new customers through various digital channels.',
-      requirements: [
-        '2+ years in digital marketing',
-        'Experience with SEO, SEM, and social media',
-        'Strong analytical and communication skills',
-        'Familiarity with marketing tools'
-      ],
-      responsibilities: [
-        'Develop marketing strategies',
-        'Manage social media campaigns',
-        'Analyze campaign performance',
-        'Create engaging content'
-      ]
-    },
-    {
-      id: 4,
-      title: 'Backend Engineer',
-      department: 'Engineering',
-      location: 'Kathmandu, Nepal',
-      type: 'Full-time',
-      salary: 'NRP 45k - NRP 65k',
-      description: 'Looking for a skilled Backend Engineer to build robust APIs and services that power our applications.',
-      requirements: [
-        '4+ years backend development experience',
-        'Strong knowledge of Node.js or Python',
-        'Experience with REST APIs and microservices',
-        'Database expertise (SQL and NoSQL)'
-      ],
-      responsibilities: [
-        'Design and implement APIs',
-        'Optimize database queries',
-        'Ensure system scalability',
-        'Write unit and integration tests'
-      ]
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch(
+        // "https://ridimatuladhar.com.np/gr8/api/careers/get_careers.php"
+        "http://localhost/gr8/api/careers/get_careers.php"
+      );
+      const data = await res.json();
+      if (data.success) {
+        setJobs(data.careers);
+      }
+    } catch (err) {
+      console.error("Error fetching careers", err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   const benefits = [
     {
@@ -183,26 +119,57 @@ export default function CareersPage() {
     });
   };
 
-  const handleSubmitApplication = () => {
+  const handleSubmitApplication = async () => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setApplicationData({
-        name: '',
-        email: '',
-        phone: '',
-        portfolio: '',
-        coverLetter: '',
-        resume: null
-      });
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('career_id', selectedJob.id);
+      formDataToSend.append('job_title', selectedJob.title);
+      formDataToSend.append('name', applicationData.name);
+      formDataToSend.append('email', applicationData.email);
+      formDataToSend.append('phone', applicationData.phone);
+      formDataToSend.append('portfolio', applicationData.portfolio);
+      formDataToSend.append('cover_letter', applicationData.coverLetter);
+      
+      if (applicationData.resume) {
+        formDataToSend.append('resume', applicationData.resume);
+      }
 
-      setTimeout(() => {
-        handleCloseModal();
-      }, 2000);
-    }, 2000);
+      const response = await fetch(
+        // "https://ridimatuladhar.com.np/gr8/api/applications/submit_application.php"
+        "http://localhost/gr8/api/applications/submit_application.php",
+        {
+          method: 'POST',
+          body: formDataToSend
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitSuccess(true);
+        setApplicationData({
+          name: '',
+          email: '',
+          phone: '',
+          portfolio: '',
+          coverLetter: '',
+          resume: null
+        });
+
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      } else {
+        alert(data.message || 'Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const containerVariants = {

@@ -75,7 +75,7 @@ const Admin_Main_Page = () => {
     } catch (err) {
       console.error('Error fetching notifications:', err);
     }
-  }, []);
+  }, []); 
 
   useEffect(() => {
     fetchNotifications();
@@ -187,7 +187,8 @@ const Admin_Main_Page = () => {
 const handleLogout = async () => {
     confirm("are you sure you want to logout?")
     try {
-      const res = await fetch("http://localhost/gr8/api/auth/logout.php", {
+      // const res = await fetch("http://localhost/gr8/api/auth/logout.php", {
+      const res = await fetch("https://api.gr8.com.np/gr8/api/auth/logout.php", {
         method: "POST",
         credentials: "include", // important for sending session cookie
       });

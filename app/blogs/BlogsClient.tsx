@@ -134,7 +134,9 @@ function BlogsContent() {
 
   // Show single blog detail view
   if (blogSlug && selectedBlog) {
-    const tags = selectedBlog.tags.split(',').map(tag => tag.trim());
+    // const tags = selectedBlog.tags.split(',').map(tag => tag.trim());
+    const tags = (selectedBlog.tags || "").split(',').filter(Boolean).map(tag => tag.trim());
+
 
     return (
       <>

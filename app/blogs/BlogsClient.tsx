@@ -102,8 +102,17 @@ function BlogsContent() {
     }
   };
 
-  const parseTags = (tagsString: string): Tag[] =>
-    tagsString.split(",").map((tag, index) => ({
+  // const parseTags = (tagsString: string): Tag[] =>
+  //   tagsString.split(",").map((tag, index) => ({
+  //     label: tag.trim(),
+  //     color: index % 2 === 0 ? "teal" : "purple",
+  //   }));
+
+  const parseTags = (tagsString: string | null | undefined): Tag[] =>
+  (tagsString || "")
+    .split(',')
+    .filter(Boolean)
+    .map((tag, index) => ({
       label: tag.trim(),
       color: index % 2 === 0 ? "teal" : "purple",
     }));

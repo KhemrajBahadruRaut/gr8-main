@@ -25,8 +25,8 @@ export async function generateMetadata(
 
   try {
     const res = await fetch(
-      `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`,
-      // `https://api.gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`,
+      // `http://localhost/gr8/api/blogs/get_blog.php?slug=${slug}`,
+      `https://api.gr8.com.np/gr8/api/blogs/get_blog.php?slug=${slug}`,
       { cache: 'no-store' } // always fresh
     );
     const data = await res.json();

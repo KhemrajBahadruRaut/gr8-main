@@ -29,17 +29,25 @@ export default function AdminBlogPanel() {
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/get_blog.php`);
-      const data = await response.json();
-      if (data.success) {
-        setBlogs(data.blogs);
-      }
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
+ const fetchBlogs = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/get_blog.php`);
+    const data = await response.json();
+    if (data.success) {
+      // Ensure all blogs have tags property
+      const sanitizedBlogs = data.blogs.map(blog => ({
+        ...blog,
+        tags: blog.tags || '',
+        read_time: blog.read_time || '',
+        image: blog.image || '',
+        date: blog.date || new Date().toISOString().split('T')[0]
+      }));
+      setBlogs(sanitizedBlogs);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
+  }
+};
 
   const generateSlug = (title) => {
     return title
@@ -162,24 +170,33 @@ export default function AdminBlogPanel() {
     }, 100);
   };
 
-  const formatDateForInput = (dateStr) => {
-    try {
-      const months = {
-        'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
-        'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
-        'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
-      };
-      
-      const parts = dateStr.replace(/\d+(st|nd|rd|th)/, '').trim().split(' ');
-      const day = dateStr.match(/\d+/)[0].padStart(2, '0');
-      const month = months[parts[0].replace(',', '')];
-      const year = parts[1].replace(',', '');
-      
-      return `${year}-${month}-${day}`;
-    } catch (e) {
-      return new Date().toISOString().split('T')[0];
+ const formatDateForInput = (dateStr) => {
+  try {
+    if (!dateStr) return new Date().toISOString().split('T')[0];
+    
+    // Try to parse as ISO date first
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0];
     }
-  };
+    
+    // Fallback to your existing parsing logic
+    const months = {
+      'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+      'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+      'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+    };
+    
+    const parts = dateStr.replace(/\d+(st|nd|rd|th)/, '').trim().split(' ');
+    const day = dateStr.match(/\d+/)[0].padStart(2, '0');
+    const month = months[parts[0].replace(',', '')];
+    const year = parts[1].replace(',', '');
+    
+    return `${year}-${month}-${day}`;
+  } catch (e) {
+    return new Date().toISOString().split('T')[0];
+  }
+};
 
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this blog?')) return;
@@ -225,10 +242,14 @@ export default function AdminBlogPanel() {
     }
   };
 
-  const filteredBlogs = blogs.filter(blog =>
-    blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.tags.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const filteredBlogs = blogs.filter(blog => {
+  const title = blog.title || '';
+  const tags = blog.tags || '';
+  const search = searchTerm.toLowerCase();
+  
+  return title.toLowerCase().includes(search) || 
+         tags.toLowerCase().includes(search);
+});
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -345,7 +366,7 @@ export default function AdminBlogPanel() {
               <tbody className="divide-y divide-gray-200">
                 {filteredBlogs.map((blog) => (
                   <tr key={blog.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3">
+                    {/* <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <img 
                           src={blog.image} 
@@ -360,7 +381,22 @@ export default function AdminBlogPanel() {
                           </div>
                         </div>
                       </div>
-                    </td>
+                    </td> */}
+                    <td className="px-4 py-3">
+  <div className="flex flex-wrap gap-1 max-w-50">
+    {blog.tags && blog.tags.split(',').slice(0, 2).map((tag, idx) => (
+      <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+        {tag.trim()}
+      </span>
+    ))}
+    {blog.tags && blog.tags.split(',').length > 2 && (
+      <span className="px-2 py-1 text-gray-500 text-xs">+{blog.tags.split(',').length - 2}</span>
+    )}
+    {!blog.tags && (
+      <span className="px-2 py-1 text-gray-400 text-xs italic">No tags</span>
+    )}
+  </div>
+</td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                         Published

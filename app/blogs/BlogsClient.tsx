@@ -102,12 +102,6 @@ function BlogsContent() {
     }
   };
 
-  // const parseTags = (tagsString: string): Tag[] =>
-  //   tagsString.split(",").map((tag, index) => ({
-  //     label: tag.trim(),
-  //     color: index % 2 === 0 ? "teal" : "purple",
-  //   }));
-
   const parseTags = (tagsString: string | null | undefined): Tag[] =>
   (tagsString || "")
     .split(',')
@@ -143,7 +137,6 @@ function BlogsContent() {
 
   // Show single blog detail view
   if (blogSlug && selectedBlog) {
-    // const tags = selectedBlog.tags.split(',').map(tag => tag.trim());
     const tags = (selectedBlog.tags || "").split(',').filter(Boolean).map(tag => tag.trim());
 
 

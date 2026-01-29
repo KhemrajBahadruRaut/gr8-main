@@ -34,7 +34,7 @@ export default function AdminBlogPanel() {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/get_blog.php`);
       const data = await response.json();
-      console.log('API Response:', data);
+      // console.log('API Response:', data);
       
       if (data.success && Array.isArray(data.blogs)) {
         const sanitizedBlogs = data.blogs

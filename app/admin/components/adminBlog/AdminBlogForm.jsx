@@ -29,25 +29,40 @@ export default function AdminBlogPanel() {
     fetchBlogs();
   }, []);
 
- const fetchBlogs = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/get_blog.php`);
-    const data = await response.json();
-    if (data.success) {
-      // Ensure all blogs have tags property
-      const sanitizedBlogs = data.blogs.map(blog => ({
-        ...blog,
-        tags: blog.tags || '',
-        read_time: blog.read_time || '',
-        image: blog.image || '',
-        date: blog.date || new Date().toISOString().split('T')[0]
-      }));
-      setBlogs(sanitizedBlogs);
+  const fetchBlogs = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/get_blog.php`);
+      const data = await response.json();
+      console.log('API Response:', data);
+      
+      if (data.success && Array.isArray(data.blogs)) {
+        const sanitizedBlogs = data.blogs
+          .filter(blog => blog != null)
+          .map(blog => ({
+            id: blog.id || '',
+            title: blog.title || 'Untitled',
+            slug: blog.slug || '',
+            description: blog.description || '',
+            content: blog.content || '',
+            image: blog.image || '',
+            tags: blog.tags || '',
+            date: blog.date || '',
+            read_time: blog.read_time || ''
+          }));
+        
+        setBlogs(sanitizedBlogs);
+      } else {
+        console.error('Invalid API response:', data);
+        setBlogs([]);
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      setBlogs([]);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching blogs:', error);
-  }
-};
+  };
 
   const generateSlug = (title) => {
     return title
@@ -151,55 +166,54 @@ export default function AdminBlogPanel() {
 
   const handleEdit = (blog) => {
     setFormData({
-      id: blog.id,
-      title: blog.title,
-      slug: blog.slug,
-      description: blog.description,
-      content: blog.content,
+      id: blog.id || '',
+      title: blog.title || '',
+      slug: blog.slug || '',
+      description: blog.description || '',
+      content: blog.content || '',
       imageFile: null,
-      tags: blog.tags,
+      tags: blog.tags || '',
       date: blog.date ? formatDateForInput(blog.date) : new Date().toISOString().split('T')[0],
-      read_time: blog.read_time
+      read_time: blog.read_time || ''
     });
     setEditMode(true);
     setShowModal(true);
     setTimeout(() => {
       if (contentEditorRef.current) {
-        contentEditorRef.current.innerHTML = blog.content;
+        contentEditorRef.current.innerHTML = blog.content || '';
       }
     }, 100);
   };
 
- const formatDateForInput = (dateStr) => {
-  try {
-    if (!dateStr) return new Date().toISOString().split('T')[0];
-    
-    // Try to parse as ISO date first
-    const date = new Date(dateStr);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString().split('T')[0];
+  const formatDateForInput = (dateStr) => {
+    try {
+      if (!dateStr) return new Date().toISOString().split('T')[0];
+      
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+      }
+      
+      const months = {
+        'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+        'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+        'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+      };
+      
+      const parts = dateStr.replace(/\d+(st|nd|rd|th)/, '').trim().split(' ');
+      const dayMatch = dateStr.match(/\d+/);
+      const day = dayMatch ? dayMatch[0].padStart(2, '0') : '01';
+      const month = months[parts[0]?.replace(',', '')] || '01';
+      const year = parts[1]?.replace(',', '') || new Date().getFullYear().toString();
+      
+      return `${year}-${month}-${day}`;
+    } catch (e) {
+      return new Date().toISOString().split('T')[0];
     }
-    
-    // Fallback to your existing parsing logic
-    const months = {
-      'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
-      'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
-      'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
-    };
-    
-    const parts = dateStr.replace(/\d+(st|nd|rd|th)/, '').trim().split(' ');
-    const day = dateStr.match(/\d+/)[0].padStart(2, '0');
-    const month = months[parts[0].replace(',', '')];
-    const year = parts[1].replace(',', '');
-    
-    return `${year}-${month}-${day}`;
-  } catch (e) {
-    return new Date().toISOString().split('T')[0];
-  }
-};
+  };
 
   const handleDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this blog?')) return;
+    if (!id || !confirm('Are you sure you want to delete this blog?')) return;
 
     try {
       const response = await fetch(`${API_BASE_URL}/delete_blog.php`, {
@@ -242,14 +256,16 @@ export default function AdminBlogPanel() {
     }
   };
 
-const filteredBlogs = blogs.filter(blog => {
-  const title = blog.title || '';
-  const tags = blog.tags || '';
-  const search = searchTerm.toLowerCase();
-  
-  return title.toLowerCase().includes(search) || 
-         tags.toLowerCase().includes(search);
-});
+  const filteredBlogs = blogs.filter(blog => {
+    if (!blog) return false;
+    
+    const title = blog.title || '';
+    const tags = blog.tags || '';
+    const search = searchTerm.toLowerCase();
+    
+    return title.toLowerCase().includes(search) || 
+           tags.toLowerCase().includes(search);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -350,114 +366,168 @@ const filteredBlogs = blogs.filter(blog => {
           </div>
         </div>
 
-        {/* Blogs Table */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredBlogs.map((blog) => (
-                  <tr key={blog.id} className="hover:bg-gray-50 transition-colors">
-                    {/* <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <img 
-                          src={blog.image} 
-                          alt={blog.title}
-                          className="w-12 h-12 object-cover rounded-lg"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900 text-sm line-clamp-1">{blog.title}</div>
-                          <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                            <Clock className="w-3 h-3" />
-                            {blog.read_time}
-                          </div>
-                        </div>
-                      </div>
-                    </td> */}
-                    <td className="px-4 py-3">
-  <div className="flex flex-wrap gap-1 max-w-50">
-    {blog.tags && blog.tags.split(',').slice(0, 2).map((tag, idx) => (
-      <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
-        {tag.trim()}
-      </span>
-    ))}
-    {blog.tags && blog.tags.split(',').length > 2 && (
-      <span className="px-2 py-1 text-gray-500 text-xs">+{blog.tags.split(',').length - 2}</span>
-    )}
-    {!blog.tags && (
-      <span className="px-2 py-1 text-gray-400 text-xs italic">No tags</span>
-    )}
-  </div>
-</td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Published
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-1 max-w-50">
-                        {blog.tags.split(',').slice(0, 2).map((tag, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
-                            {tag.trim()}
-                          </span>
-                        ))}
-                        {blog.tags.split(',').length > 2 && (
-                          <span className="px-2 py-1 text-gray-500 text-xs">+{blog.tags.split(',').length - 2}</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600 text-sm">{blog.date}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => handleEdit(blog)}
-                          className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                          title="Edit"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(blog.id)}
-                          className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                        <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {filteredBlogs.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-2">No blog posts found</div>
-                <p className="text-gray-500 text-sm mb-4">Get started by creating your first blog post</p>
-                <button
-                  onClick={() => {
-                    resetForm();
-                    setShowModal(true);
-                  }}
-                  className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 justify-center"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create New Post
-                </button>
-              </div>
-            )}
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-8">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <p className="text-gray-500 mt-2">Loading blogs...</p>
           </div>
-        </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && filteredBlogs.length === 0 && blogs.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-2">No blog posts found</div>
+            <p className="text-gray-500 text-sm mb-4">Get started by creating your first blog post</p>
+            <button
+              onClick={() => {
+                resetForm();
+                setShowModal(true);
+              }}
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 justify-center"
+            >
+              <Plus className="w-4 h-4" />
+              Create New Post
+            </button>
+          </div>
+        )}
+
+        {/* Blogs Table */}
+        {!loading && filteredBlogs.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tags</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredBlogs.map((blog) => {
+                    if (!blog) return null;
+                    
+                    const safeBlog = {
+                      id: blog.id || '',
+                      title: blog.title || 'Untitled',
+                      image: blog.image || '',
+                      read_time: blog.read_time || '',
+                      tags: blog.tags || '',
+                      date: blog.date || '',
+                      status: blog.status || 'published'
+                    };
+                    
+                    return (
+                      <tr key={safeBlog.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            {safeBlog.image ? (
+                              <img 
+                                src={safeBlog.image} 
+                                alt={safeBlog.title}
+                                className="w-12 h-12 object-cover rounded-lg"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.style.display = 'none';
+                                  e.target.parentElement.innerHTML = `
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                      </svg>
+                                    </div>
+                                  `;
+                                }}
+                              />
+                            ) : (
+                              <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                <FileText className="w-6 h-6 text-gray-400" />
+                              </div>
+                            )}
+                            <div>
+                              <div className="font-medium text-gray-900 text-sm line-clamp-1">
+                                {safeBlog.title}
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                <Clock className="w-3 h-3" />
+                                {safeBlog.read_time || 'No time specified'}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Published
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-wrap gap-1 max-w-50">
+                            {safeBlog.tags ? (
+                              <>
+                                {safeBlog.tags.split(',').slice(0, 2).map((tag, idx) => (
+                                  <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+                                    {tag.trim()}
+                                  </span>
+                                ))}
+                                {safeBlog.tags.split(',').length > 2 && (
+                                  <span className="px-2 py-1 text-gray-500 text-xs">
+                                    +{safeBlog.tags.split(',').length - 2}
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <span className="px-2 py-1 text-gray-400 text-xs italic">No tags</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-gray-600 text-sm">
+                          {safeBlog.date || 'No date'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => handleEdit(blog)}
+                              className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(safeBlog.id)}
+                              className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                            <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Search Results Empty State */}
+        {!loading && blogs.length > 0 && filteredBlogs.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-2">No matching blog posts found</div>
+            <p className="text-gray-500 text-sm mb-4">Try adjusting your search terms</p>
+            <button
+              onClick={() => setSearchTerm('')}
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+            >
+              Clear search
+            </button>
+          </div>
+        )}
 
         {/* Modal */}
         {showModal && (

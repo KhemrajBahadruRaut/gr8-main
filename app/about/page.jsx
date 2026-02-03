@@ -105,13 +105,23 @@ const TeamMember = React.memo(({ member, index, level = 0 }) => {
       ></div>
 
       {/* Level indicator */}
-      <div className="absolute top-4 right-4">
+      {/* <div className="absolute top-4 right-4">
         <div
           className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getBadgeColor()}`}
         >
-          {level === 0 ? "Co-Founder" : level === 1 ? "Co-Founder" : "Team"}
+          {level === 0 ? "Co-Founder" : level === 1 ? "" : "Team"}
         </div>
-      </div>
+      </div> */}
+    {level !== 1 && (
+        <div className="absolute top-4 right-4">
+          <div
+            className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getBadgeColor()}`}
+          >
+            {level === 0 ? "Co-Founder" : "Team"}
+          </div>
+        </div>
+      )}
+
 
       {/* Avatar container */}
       <div className="relative mb-6 z-10 ">
@@ -279,9 +289,9 @@ export default function AboutSection() {
           avatar: "/team/s.png",
           department: "Executive Leadership",
           social: {
-            linkedin:
-              "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
-            email: "sujata@gr8private.com",
+            // linkedin:
+            //   "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
+            // email: "sujata@gr8private.com",
           },
         },
         {
@@ -292,8 +302,8 @@ export default function AboutSection() {
           avatar: "/team/su.webp",
           department: "Executive Leadership",
           social: {
-            Facebook: "https://www.facebook.com/surajgr8realtor",
-            email: "nilendra@gr8private.com",
+            // Facebook: "https://www.facebook.com/surajgr8realtor",
+            // email: "nilendra@gr8private.com",
           },
         },
       ],
@@ -311,9 +321,9 @@ export default function AboutSection() {
           avatar: "/team/n.jpg",
           department: "Executive Leadership",
           social: {
-            linkedin:
-              "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
-            email: "nilendra@gr8private.com",
+            // linkedin:
+            //   "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
+            // email: "nilendra@gr8private.com",
           },
         },
         {
@@ -324,9 +334,9 @@ export default function AboutSection() {
           avatar: "/team/d.jpg",
           department: "Executive Leadership",
           social: {
-            linkedin:
-              "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
-            email: "nilendra@gr8private.com",
+            // linkedin:
+              // "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
+            // email: "nilendra@gr8private.com",
           },
         },
       ],
@@ -345,8 +355,8 @@ export default function AboutSection() {
           avatar: "/team/i.jpg",
           department: "Marketing",
           social: {
-            linkedin: "https://www.linkedin.com/in/injol-shrestha/",
-            email: "injol@gr8.com.np",
+            // linkedin: "https://www.linkedin.com/in/injol-shrestha/",
+            // email: "injol@gr8.com.np",
           },
         },
         {
@@ -357,8 +367,8 @@ export default function AboutSection() {
           avatar: "/team/an.webp",
           department: "Creative",
           social: {
-            linkedin: "https://www.linkedin.com/in/anup-shrestha-63515735b/",
-            email: "anup@gr8private.com",
+            // linkedin: "https://www.linkedin.com/in/anup-shrestha-63515735b/",
+            // email: "anup@gr8private.com",
           },
         },
         // Development Team
@@ -370,8 +380,8 @@ export default function AboutSection() {
           avatar: "/team/a.png",
           department: "Technology",
           social: {
-            github: "https://github.com/KhemrajBahadruRaut",
-            email: "khemraj@gr8.com.np",
+            // github: "https://github.com/KhemrajBahadruRaut",
+            // email: "khemraj@gr8.com.np",
           },
         },
         {
@@ -382,8 +392,8 @@ export default function AboutSection() {
           avatar: "/team/ri.jpg",
           department: "Technology",
           social: {
-            github: "https://github.com/ridimatuladhar",
-            email: "ridima@gr8.com.np",
+            // github: "https://github.com/ridimatuladhar",
+            // email: "ridima@gr8.com.np",
           },
         },
 
@@ -398,7 +408,7 @@ export default function AboutSection() {
           department: "Business Development",
           social: {
             // linkedin: "https://linkedin.com",
-            email: "rahul@gr8private.com",
+            // email: "rahul@gr8private.com",
           },
         },
         {
@@ -409,8 +419,8 @@ export default function AboutSection() {
           avatar: "/team/p.jpg",
           department: "Sales & Marketing",
           social: {
-            linkedin: "https://linkedin.com",
-            email: "prasuna@gr8private.com",
+            // linkedin: "https://linkedin.com",
+            // email: "prasuna@gr8private.com",
           },
         },
       ],
@@ -546,7 +556,7 @@ export default function AboutSection() {
 
           {/* Display Team Members by Level */}
           {teamHierarchy.map((levelGroup, groupIndex) => (
-            <div key={groupIndex} className="mb-16 last:mb-0 border ">
+            <div key={groupIndex} className="mb-16 last:mb-0  ">
               <h3
                 className={`text-2xl font-bold mb-8 text-center ${
                   levelGroup.level === 0

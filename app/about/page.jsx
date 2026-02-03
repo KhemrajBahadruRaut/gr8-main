@@ -428,7 +428,7 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="bg-slate-900 py-20 px-6 relative overflow-hidden lg:pt-32">
+    <section className="bg-[#101820] py-20 px-6 relative overflow-hidden lg:pt-32">
       {/* Background Elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl animate-float"></div>
       <div className="absolute bottom-20 right-10 w-64 h-64 bg-slate-700/5 rounded-full blur-3xl animate-float-delayed"></div>

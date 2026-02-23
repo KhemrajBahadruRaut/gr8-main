@@ -51,41 +51,41 @@ const Navbar = () => {
 
   const menuItems = [
     { name: "Home", hasSubmenu: false, link: "/" },
-    { name: "About us", hasSubmenu: false, link: "/about" },
-    { name: "Portfolio", hasSubmenu: false, link: "/portfolio" },
+    { name: "About us", hasSubmenu: false, link: "/about/" },
+    { name: "Portfolio", hasSubmenu: false, link: "/portfolio/" },
     {
       name: "Services",
       hasSubmenu: true,
-      link: "/services",
+      link: "/services/",
       submenuItems: [
-        { name: "Web Development", link: "/services/web-development" },
+        { name: "Web Development", link: "/services/web-development/" },
         {
           name: "Mobile App Development",
-          link: "/services/mobile-app-development",
+          link: "/services/mobile-app-development/",
         },
-        { name: "Graphics Designing", link: "/services/graphics-designing" },
-        { name: "Email Marketing", link: "/services/email-marketing" },
-        { name: "SEO Services", link: "/services/seo-services" },
+        { name: "Graphics Designing", link: "/services/graphics-designing/" },
+        { name: "Email Marketing", link: "/services/email-marketing/" },
+        { name: "SEO Services", link: "/services/seo-services/" },
         {
           name: "Social Media Marketing",
-          link: "/services/social-media-marketing",
+          link: "/services/social-media-marketing/",
         },
         {
           name: "Printing and Publishing",
-          link: "/services/printing-publishing",
+          link: "/services/printing-publishing/",
         },
-        { name: "Pay-Per-Click (PPC)", link: "/services/ppc" },
-        { name: "Content writing", link: "/services/content-writing" },
+        { name: "Pay-Per-Click (PPC)", link: "/services/ppc/" },
+        { name: "Content writing", link: "/services/content-writing/" },
       ],
     },
     {
       name: "Resources",
       hasSubmenu: true,
-      link: "/resources",
+      link: "/resources/",
       submenuItems: [
-        { name: "Blog", link: "/blogs" },
+        { name: "Blog", link: "/blogs/" },
         // { name: "News Letters", link: "/resources/newsletters" },
-        { name: "Help Center", link: "/resources/help-center" },
+        { name: "Help Center", link: "/resources/help-center/" },
         // {
         //   name: "Social Media Courses",
         //   link: "/resources/social-media-courses",
@@ -93,8 +93,8 @@ const Navbar = () => {
       ],
     },
     // { name: "Merchendise", hasSubmenu: false, link: "/merchendise" },
-    { name: "Careers", hasSubmenu: false, link: "/careers" },
-    { name: "Contact Us", hasSubmenu: false, link: "/contact" },
+    { name: "Careers", hasSubmenu: false, link: "/careers/" },
+    { name: "Contact Us", hasSubmenu: false, link: "/contact/" },
   ];
 
   const socialLinks = [

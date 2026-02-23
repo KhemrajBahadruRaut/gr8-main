@@ -2,12 +2,22 @@ import React from 'react';
 import { Calendar, Clock, ArrowLeft, Share2, Bookmark, Search, Smartphone, MessageCircle, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 
+export const metadata = {
+  title:
+    "Discover Why a Strong Online Presence is Essential for Business Growth",
+  description:
+    "Learn the key strategies and benefits of building a comprehensive digital footprint that drives customer engagement and business expansion.",
+  alternates: {
+    canonical: "https://gr8.com.np/blogs/online-presence-growth/",
+  },
+};
+
 export default function OnlinePresenceGrowth() {
   return (
     <div className="bg-[#0f1821] text-white pt-18">
       <nav className="border-b border-slate-700/50">
         <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link href="/blogs">
+          <Link href="/blogs/">
             <button className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors">
               <ArrowLeft className="w-5 h-5" />
               Back to Blogs

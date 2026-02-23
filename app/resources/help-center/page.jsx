@@ -188,19 +188,19 @@ export default function HelpCenterPage() {
       icon: FileText,
       title: 'Documentation',
       description: 'Comprehensive guides and references',
-      link: '/docs'
+      link: '/resources/help-center'
     },
     {
       icon: Video,
       title: 'Video Library',
       description: 'Video tutorials and webinars',
-      link: '/videos'
+      link: '/resources/help-center'
     },
     {
       icon: Users,
       title: 'Community Forum',
       description: 'Connect with other users',
-      link: '/community'
+      link: '/resources/help-center'
     },
     {
       icon: Book,

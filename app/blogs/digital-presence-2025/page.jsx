@@ -2,13 +2,22 @@ import React from 'react';
 import { Calendar, Clock, ArrowLeft, Share2, Bookmark, Globe, Users, TrendingUp, Target } from 'lucide-react';
 import Link from 'next/link';
 
+export const metadata = {
+  title: "Why Every Business Needs a Strong Digital Presence in 2025",
+  description:
+    "Discover how digital transformation is reshaping business landscapes and why establishing a robust online presence is crucial for success in 2025.",
+  alternates: {
+    canonical: "https://gr8.com.np/blogs/digital-presence-2025/",
+  },
+};
+
 export default function DigitalPresence2025() {
   return (
     <div className="bg-[#0f1821] text-white pt-18">
       {/* Navigation */}
       <nav className="border-b border-slate-700/50">
         <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link href="/blogs">
+          <Link href="/blogs/">
             <button className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors">
               <ArrowLeft className="w-5 h-5" />
               Back to Blogs

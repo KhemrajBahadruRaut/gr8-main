@@ -2,12 +2,21 @@ import React from 'react';
 import { Calendar, Clock, ArrowLeft, Share2, Bookmark, Mic, Video, Zap, Users } from 'lucide-react';
 import Link from 'next/link';
 
+export const metadata = {
+  title: "The Future of Digital Marketing: Trends to Watch in 2025",
+  description:
+    "Explore the emerging technologies and strategies that will define digital marketing success in 2025.",
+  alternates: {
+    canonical: "https://gr8.com.np/blogs/future-digital-marketing/",
+  },
+};
+
 export default function FutureDigitalMarketing() {
   return (
     <div className="bg-[#0f1821] text-white pt-18">
       <nav className="border-b border-slate-700/50">
         <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link href="/blogs">
+          <Link href="/blogs/">
             <button className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors">
               <ArrowLeft className="w-5 h-5" />
               Back to Blogs

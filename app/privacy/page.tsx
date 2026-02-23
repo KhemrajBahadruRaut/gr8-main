@@ -182,7 +182,7 @@ export default function PrivacyPolicy() {
             ← Back to Home
           </Link>
           <Link 
-            href="/terms-and-condition" 
+            href="/terms-and-condition/" 
             className="text-orange-500 hover:text-orange-400 transition-colors duration-300 font-medium"
           >
             View Terms & Conditions →

@@ -55,7 +55,7 @@ export default function BlogDetailPage({ slug, blog }: BlogDetailPageProps) {
 
       <div className="bg-[#0f1821] text-white pt-22">
         <div className="max-w-7xl mx-auto px-6 py-2">
-          <Link href="/blogs">
+          <Link href="/blogs/">
             <button className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors">
               <ArrowLeft className="w-5 h-5" />
               Back to Blogs

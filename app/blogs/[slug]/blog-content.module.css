@@ -1,0 +1,142 @@
+.content {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.content :global(h1) {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 1em 0 0.67em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.content :global(h2) {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 1.3em 0 0.75em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.content :global(h3) {
+  font-size: 1.17em;
+  font-weight: 700;
+  margin: 1.2em 0 0.83em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.content :global(p) {
+  margin: 1em 0;
+  line-height: 1.2;
+  color: #d1d5db;
+}
+
+.content :global(ul),
+.content :global(ol) {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.content :global(ul) {
+  list-style-type: disc;
+}
+
+.content :global(ol) {
+  list-style-type: decimal;
+}
+
+.content :global(li) {
+  margin: 0.5em 0;
+  line-height: 1.8;
+  color: #d1d5db;
+}
+
+.content :global(a) {
+  color: #34d399;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.content :global(a:hover) {
+  color: #10b981;
+}
+
+.content :global(strong) {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.content :global(em) {
+  font-style: italic;
+}
+
+.content :global(u) {
+  text-decoration: underline;
+}
+
+.content :global(blockquote) {
+  border-left: 4px solid #34d399;
+  padding-left: 1.5em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+.content :global(code) {
+  background-color: #1e293b;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  color: #34d399;
+}
+
+.content :global(pre) {
+  background-color: #1e293b;
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.content :global(pre code) {
+  background-color: transparent;
+  padding: 0;
+}
+
+.content :global(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5em 0;
+}
+
+.content :global(hr) {
+  border: none;
+  border-top: 1px solid #374151;
+  margin: 2em 0;
+}
+
+.content :global(*) {
+  max-width: 100%;
+}
+
+.content :global(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+.content :global(th),
+.content :global(td) {
+  border: 1px solid #374151;
+  padding: 0.75em;
+  text-align: left;
+}
+
+.content :global(th) {
+  background-color: #1e293b;
+  font-weight: 700;
+}

@@ -138,7 +138,7 @@ export default function TermsAndConditions() {
         {/* Footer Navigation */}
         <div className="mt-16 pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row justify-between items-center gap-4">
           <Link 
-            href="/privacy" 
+            href="/privacy/" 
             className="text-orange-500 hover:text-orange-400 transition-colors duration-300 font-medium"
           >
             ← View Privacy Policy

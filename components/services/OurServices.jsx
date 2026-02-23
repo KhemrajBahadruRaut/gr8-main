@@ -36,19 +36,19 @@ export default function ServicesSection() {
       icon: <Smartphone className="w-5 h-5" />,
       title: "App Development",
       description: "Custom mobile applications built with cutting-edge technology for iOS and Android platforms.",
-      Link: "/services/mobile-app-development"
+      Link: "/services/mobile-app-development/"
     },
     {
       icon: <Code className="w-5 h-5" />,
       title: "Website Development",
       description: "Responsive, high-performance websites and web applications tailored to your business needs.",
-      Link: "/services/web-development"
+      Link: "/services/web-development/"
     },
     {
       icon: <TrendingUp className="w-5 h-5" />,
       title: "Search Engine Optimization (SEO)",
       description: "Boost your online visibility and drive organic traffic with our comprehensive SEO strategies.",
-      Link: "/services/seo-services"
+      Link: "/services/seo-services/"
     },
   ], []);
 
@@ -57,19 +57,19 @@ export default function ServicesSection() {
       icon: <Palette className="w-5 h-5" />,
       title: "Graphics Designing",
       description: "Visually stunning designs that communicate your brand's story and values effectively.",
-      Link: "/services/graphics-designing"
+      Link: "/services/graphics-designing/"
     },
     {
       icon: <PenBoxIcon className="w-5 h-5" />,
       title: "Content Writing",
       description: "Compelling content that engages your audience and strengthens your brand voice.",
-      Link: "/services/content-writing"
+      Link: "/services/content-writing/"
     },
     {
       icon: <PrinterIcon className="w-5 h-5" />,
       title: "Printing and Publishing",
       description: "High-quality print materials that make your brand stand out in physical spaces.",
-      Link: "/services/printing-publishing"
+      Link: "/services/printing-publishing/"
     },
   ], []);
 
@@ -78,19 +78,19 @@ export default function ServicesSection() {
       icon: <TbSocial className="w-5 h-5" />,
       title: "Social Media Marketing",
       description: "Strategic social media campaigns that build community and drive meaningful engagement.",
-      Link: "/services/social-media-marketing"
+      Link: "/services/social-media-marketing/"
     },
     {
       icon: <TfiEmail className="w-5 h-5" />,
       title: "Email Marketing",
       description: "Personalized email campaigns that nurture leads and convert subscribers into customers.",
-      Link: "/services/email-marketing"
+      Link: "/services/email-marketing/"
     },
     {
       icon: <BsCursor className="w-5 h-5" />,
       title: "Pay Per Click (PPC)",
       description: "Data-driven PPC campaigns that maximize ROI and accelerate business growth.",
-      Link: "/services/ppc-advertising"
+      Link: "/services/ppc/"
     },
   ], []);
 
@@ -439,7 +439,7 @@ export default function ServicesSection() {
             whileTap={{ scale: 0.95 }}
           >
             <Link 
-              href="/contact" 
+              href="/contact/" 
               className="inline-flex items-center gap-2 bg-linear-to-r from-cyan-500 to-emerald-500 hover:from-cyan-600 hover:to-emerald-600 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
             >
               Start Your Project

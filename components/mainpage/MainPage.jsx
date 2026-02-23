@@ -51,7 +51,7 @@ export default function MainPage() {
             <Link
               className="bg-linear-to-r from-[#B64546] to-[#F2D08A] hover:from-[#F2D08A] hover:to-[#B64546] hover:scale-105 hover:shadow-sm transition-all duration-300 ease-in-out text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-orange-600/50 animate-fade-in-up"
               style={{ animationDelay: "400ms" }}
-              href="/portfolio"
+              href="/portfolio/"
             >
               See our Works
             </Link>
@@ -59,7 +59,7 @@ export default function MainPage() {
             <Link
               className="relative inline-flex items-center justify-center px-10 py-3 font-medium rounded-full bg-transparent group transition-all duration-300 ease-out hover:scale-105 animate-fade-in-up"
               style={{ animationDelay: "500ms" }}
-              href="/contact"
+              href="/contact/"
             >
               {/* Gradient border */}
               <span className="absolute inset-0 rounded-full p-px bg-linear-to-r from-[#F2D08A] to-[#B64546] transition-all duration-300 ease-out">

@@ -195,7 +195,7 @@ export default function BlogsSection() {
                 whileHover="hover"
               >
                 {/* Update the Link href to use the slug instead of id */}
-                <Link href={`/blogs/${blog.slug}`} className="block h-full">
+                <Link href={`/blogs/${blog.slug}/`} className="block h-full">
                   {" "}
                   <div className="relative h-48 overflow-hidden p-6">
                     <motion.div
@@ -297,7 +297,7 @@ export default function BlogsSection() {
             whileHover="hover"
             whileTap="tap"
           >
-            <Link href="/blogs">
+            <Link href="/blogs/">
               <button className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-3 rounded-full flex items-center gap-2 transition-all duration-300 group shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40">
                 See all blogs
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

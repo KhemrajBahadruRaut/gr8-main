@@ -137,9 +137,9 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-slate-700/50 pt-8">
-          <p className="text-center text-gray-500 text-sm">
-            © {new Date().getFullYear()} All Rights Reserved. G R Eight Private
-            Limited
+          <p className="text-center text-gray-300 text-sm">
+            &copy; {new Date().getFullYear()} All Rights Reserved. G R Eight
+            Private Limited
           </p>
         </div>
       </div>

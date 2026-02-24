@@ -29,7 +29,7 @@ export default function TrustedBySection() {
           <p className="text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-3">
             OUR VALUED CLIENTS
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold">Trusted By</h1>
+          <h2 className="text-3xl md:text-5xl font-bold">Trusted By</h2>
         </div>
 
         <div className="relative h-32 flex items-center" style={{ contain: "layout style paint" }}>

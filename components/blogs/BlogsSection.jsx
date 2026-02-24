@@ -170,12 +170,12 @@ export default function BlogsSection() {
           >
             OUR LATEST BLOGS
           </motion.p>
-          <motion.h1
+          <motion.h2
             className="text-3xl md:text-4xl font-bold mb-6"
             variants={headerVariants}
           >
             Blogs & Articles
-          </motion.h1>
+          </motion.h2>
         </motion.div>
 
         {/* Blog Cards Grid */}

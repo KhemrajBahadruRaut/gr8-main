@@ -99,26 +99,31 @@ const Navbar = () => {
 
   const socialLinks = [
     {
+      name: "Facebook",
       icon: <FaFacebookF className="text-[15px] text-white" />,
       link: "https://www.facebook.com/GR8DigitalSolution",
       svg: "/icons/GR8-Nepal-fb.webp",
     },
     {
+      name: "Instagram",
       icon: <FaInstagram className="text-[15px] text-white" />,
       link: "https://www.instagram.com/gr8digitalsolutions/",
       svg: "/icons/GR8-Nepal-ig.webp",
     },
     {
+      name: "YouTube",
       icon: <FaYoutube className="text-[15px] text-white" />,
       link: "https://www.youtube.com/@GR8Nepal/",
       svg: "/icons/GR8-Nepal-yt.webp",
     },
     {
+      name: "TikTok",
       icon: <FaTiktok className="text-[15px] text-white" />,
       link: "https://www.tiktok.com/@gr8nepal/",
       svg: "/icons/GR8-Nepal-tt.webp",
     },
     {
+      name: "LinkedIn",
       icon: <FaLinkedinIn className="text-[15px] text-white" />,
       link: "https://www.linkedin.com/company/gr8-private-limited",
       svg: "/icons/GR8-Nepal-li.webp",
@@ -155,6 +160,7 @@ const Navbar = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group perspective"
+                    aria-label={`Follow GR8 Nepal on ${item.name} (opens in a new tab)`}
                   >
                     <div className="relative w-9 h-9 transition-transform duration-500 transform-style-preserve-3d group-hover:transform-[rotateY(180deg)]">
                       <div className="absolute w-full h-full flex items-center justify-center backface-hidden">
@@ -166,7 +172,8 @@ const Navbar = () => {
                         <div className="rounded-full">
                           <img
                             src={item.svg}
-                            alt="GR8 Nepal Social Icon"
+                            alt=""
+                            aria-hidden="true"
                             className="size-7"
                           />
                         </div>
@@ -178,6 +185,7 @@ const Navbar = () => {
 
               {/* Desktop Menu Button */}
               <button
+                type="button"
                 onClick={() => setMenuOpen(true)}
                 className="learn-more rounded-3xl"
               >
@@ -192,6 +200,7 @@ const Navbar = () => {
 
             {/* Mobile Hamburger Button */}
             <button
+              type="button"
               onClick={() => setMenuOpen(true)}
               className="md:hidden flex flex-col gap-1.5 p-2 pr-4"
               aria-label="Open menu"
@@ -227,8 +236,10 @@ const Navbar = () => {
               alt="GR8 Nepal Logo"
             />
             <button
+              type="button"
               onClick={() => setMenuOpen(false)}
               className="text-white hover:text-gray-300 transition-colors"
+              aria-label="Close menu"
             >
               <FaTimes className="text-2xl" />
             </button>
@@ -242,6 +253,7 @@ const Navbar = () => {
                   {item.hasSubmenu ? (
                     <div>
                       <button
+                        type="button"
                         onClick={() => {
                           setOpenSubmenus((prev) =>
                             prev.includes(index)
@@ -314,6 +326,7 @@ const Navbar = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"
+                  aria-label={`Follow GR8 Nepal on ${item.name} (opens in a new tab)`}
                 >
                   <div className="text-lg">
                     {item.icon}

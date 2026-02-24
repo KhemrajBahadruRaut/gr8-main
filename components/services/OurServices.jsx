@@ -380,12 +380,12 @@ export default function ServicesSection() {
           >
             OUR SERVICES
           </motion.p>
-          <motion.h1 
+          <motion.h2
             className="text-4xl md:text-5xl font-bold mb-6 bg-linear-to-r from-white to-cyan-200 bg-clip-text text-transparent"
             variants={fadeInUp}
           >
             What we do
-          </motion.h1>
+          </motion.h2>
           <motion.p 
             className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed"
             variants={fadeInUp}

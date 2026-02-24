@@ -203,9 +203,9 @@ export default function TestimonialsSection() {
             <p className="text-[#D79442] text-sm font-semibold tracking-widest uppercase mb-3">
               WHAT OUR CLIENTS SAY
             </p>
-            <h1 className="text-3xl md:text-4xl font-bold mb-6 bg-linear-to-r from-white to-amber-200 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-linear-to-r from-white to-amber-200 bg-clip-text text-transparent">
               Client Testimonials
-            </h1>
+            </h2>
             <p className="text-gray-400 text-lg max-w-2xl leading-relaxed">
               Don't just take our word for it. Here's what our clients have to say about 
               their experience working with us and the results we've delivered together.
@@ -316,9 +316,9 @@ export default function TestimonialsSection() {
                   </span>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-white group-hover:text-amber-100 transition-colors duration-300">
+                  <p className="font-semibold text-white group-hover:text-amber-100 transition-colors duration-300">
                     {testimonial.author}
-                  </h4>
+                  </p>
                   <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
                     {testimonial.role}
                   </p>

@@ -142,7 +142,7 @@ const Navbar = () => {
             <Link href="/">
               <img
                 src="/mainlogo/GR8-Nepal-Private-Limited-Logo.webp"
-                className="cursor-pointer h-8 md:h-14 lg:h-20 max-w-full  object-contain"
+                className="cursor-pointer h-8 md:h-14 lg:h-24 mt-2 max-w-full  object-contain"
                 alt="gr8-Nepal-Private-Limited-Logo"
                 title="gr8-Nepal-Private-Limited"
               />
@@ -258,7 +258,7 @@ const Navbar = () => {
                           setOpenSubmenus((prev) =>
                             prev.includes(index)
                               ? prev.filter((i) => i !== index)
-                              : [...prev, index]
+                              : [...prev, index],
                           );
                         }}
                         className="w-full flex items-center justify-between px-6 py-1 text-white hover:bg-slate-700 transition-colors group"
@@ -328,9 +328,7 @@ const Navbar = () => {
                   className="text-gray-400 hover:text-white transition-colors"
                   aria-label={`Follow GR8 Nepal on ${item.name} (opens in a new tab)`}
                 >
-                  <div className="text-lg">
-                    {item.icon}
-                  </div>
+                  <div className="text-lg">{item.icon}</div>
                 </Link>
               ))}
             </div>

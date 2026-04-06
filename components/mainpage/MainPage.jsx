@@ -188,10 +188,8 @@ export default function MainPage() {
 
       <style jsx>{`
         .bg-grid-pattern {
-          background-image: linear-gradient(
-              rgba(71, 85, 105, 1) 1px,
-              transparent 2px
-            ),
+          background-image:
+            linear-gradient(rgba(71, 85, 105, 1) 1px, transparent 2px),
             linear-gradient(90deg, rgba(71, 85, 105, 1) 1px, transparent 1px);
           background-size: 90px 90px;
         }

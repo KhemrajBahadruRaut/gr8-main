@@ -112,7 +112,7 @@ const TeamMember = React.memo(({ member, index, level = 0 }) => {
           {level === 0 ? "Co-Founder" : level === 1 ? "" : "Team"}
         </div>
       </div> */}
-    {level !== 1 && (
+      {level !== 1 && (
         <div className="absolute top-4 right-4">
           <div
             className={`px-2 py-1 rounded-full text-xs font-semibold text-white ${getBadgeColor()}`}
@@ -121,7 +121,6 @@ const TeamMember = React.memo(({ member, index, level = 0 }) => {
           </div>
         </div>
       )}
-
 
       {/* Avatar container */}
       <div className="relative mb-6 z-10 ">
@@ -335,7 +334,7 @@ export default function AboutSection() {
           department: "Executive Leadership",
           social: {
             // linkedin:
-              // "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
+            // "https://www.linkedin.com/in/nilendra-tamrakar-876702270/",
             // email: "nilendra@gr8private.com",
           },
         },
@@ -562,8 +561,8 @@ export default function AboutSection() {
                   levelGroup.level === 0
                     ? "text-orange-400"
                     : levelGroup.level === 1
-                    ? "text-blue-400"
-                    : "text-emerald-400"
+                      ? "text-blue-400"
+                      : "text-emerald-400"
                 }`}
               >
                 {levelGroup.title}
@@ -573,8 +572,8 @@ export default function AboutSection() {
                   levelGroup.level === 0
                     ? "grid-cols-1 md:grid-cols-2 max-w-2xl mx-auto"
                     : levelGroup.level === 1
-                    ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                      ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 }`}
               >
                 {levelGroup.members.map((member, index) => (
@@ -638,7 +637,10 @@ export default function AboutSection() {
               Join numerous clients who trust GR8 Private Limited for innovative
               digital solutions and exceptional property management services.
             </p>
-            <Link href="/contact/" className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20">
+            <Link
+              href="/contact/"
+              className="px-8 py-3 bg-linear-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20"
+            >
               Get In Touch
             </Link>
           </div>

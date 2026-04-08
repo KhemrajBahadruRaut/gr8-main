@@ -410,18 +410,6 @@ export default function AboutSection() {
             // email: "rahul@gr8private.com",
           },
         },
-        {
-          name: "Prasuna Salike",
-          role: "Sales & Business Growth Officer",
-          bio: "Growing the business by connecting with clients and creating new opportunities.",
-          icon: Users,
-          avatar: "/team/p.jpg",
-          department: "Sales & Marketing",
-          social: {
-            // linkedin: "https://linkedin.com",
-            // email: "prasuna@gr8private.com",
-          },
-        },
       ],
     },
   ];

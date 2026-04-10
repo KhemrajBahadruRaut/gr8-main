@@ -162,7 +162,8 @@ export default function AboutSection() {
     Promise.resolve().then(() => setIsVisible(true));
 
     // Fetch active team members from API
-    fetch("http://localhost/gr8/api/team/getTeam.php?active=1")
+    // fetch("http://localhost/gr8/api/team/getTeam.php?active=1")
+    fetch("https://api.gr8.com.np/gr8/api/team/getTeam.php?active=1")
       .then(r => r.json())
       .then(data => {
         if (!Array.isArray(data)) return;

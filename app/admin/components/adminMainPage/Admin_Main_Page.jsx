@@ -23,6 +23,7 @@ import {
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import TeamAdmin from "../adminTeams/Teamadmin";
 
 // Lazy load components for better performance
 const AdminBlogForm = lazy(() => import("../adminBlog/AdminBlogForm"));
@@ -55,6 +56,7 @@ const NAV_ITEMS = [
   { id: "contacts", label: "Contacts", icon: Contact, color: "blue" },
   { id: "subscribers", label: "Subscribers", icon: Mail, color: "purple" },
   { id: "careers", label: "Careers", icon: Briefcase, color: "orange" },
+  { id: "teams", label: "Teams", icon: Briefcase, color: "red" },
 ];
 
 const Admin_Main_Page = () => {
@@ -161,6 +163,8 @@ const Admin_Main_Page = () => {
         return AdminSubscribersPage;
       case "careers":
         return AdminCareersPage;
+      case "teams":
+        return TeamAdmin;
       default:
         return AdminContactsPage;
     }

@@ -71,12 +71,7 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
-        <div className="text-center mb-16">
-          {/* <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Our Creative <span className="text-blue-500">Portfolio</span>
-          </h2> */}
-          {/* <div className="h-1 w-20 bg-blue-500 mx-auto rounded-full mb-8" /> */}
-          
+        <div className="text-center mb-16 pt-10">
           <PortfolioNav
             selectedCategory={selectedCategory}
             onSelectCategory={setSelectedCategory}

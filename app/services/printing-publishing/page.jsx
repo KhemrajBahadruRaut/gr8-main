@@ -144,12 +144,12 @@ const PrintingPublishing = () => {
       {/* Hero Section */}
       <motion.div 
         ref={heroRef}
-        className="relative py-20 px-4 sm:px-6 lg:px-8"
+        className="relative py-15 px-4 sm:px-6 lg:px-8"
         initial="hidden"
         animate={heroInView ? "visible" : "hidden"}
         variants={containerVariants}
       >
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center  sm:pt-5">
           <motion.div 
             className="inline-block px-4 py-1 rounded-full bg-[#FFF6EB] text-sm mb-6"
             variants={itemVariants}

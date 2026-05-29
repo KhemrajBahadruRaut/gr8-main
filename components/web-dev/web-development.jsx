@@ -185,7 +185,7 @@ const WebDevelopment = () => {
         animate={heroInView ? "visible" : "hidden"}
         variants={containerVariants}
       >
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center sm:pt-5  ">
           <motion.div 
             className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#FFF6EB] text-sm mb-6 text-[#D79442]"
             variants={itemVariants}

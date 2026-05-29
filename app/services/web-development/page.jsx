@@ -3,7 +3,7 @@ import WebDevelopment from '../../../components/web-dev/web-development'
 
 const page = () => {
   return (
-    <div>
+    <div >
     <WebDevelopment />
     </div>
   )

@@ -21,6 +21,7 @@ interface Blog {
 }
 
 const BLOG_API_URL = "https://api.gr8.com.np/gr8/api/blogs/get_blog.php";
+// const BLOG_API_URL = "http://localhost/gr8/api/blogs/get_blog.php";
 
 export default function BlogsClient() {
   const [blogs, setBlogs] = useState<Blog[]>([]);

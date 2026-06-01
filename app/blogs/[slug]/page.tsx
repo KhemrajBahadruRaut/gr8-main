@@ -52,8 +52,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
-  // const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
-  const canonicalUrl = `http://localhost/${encodeURIComponent(slug)}/`;
+  const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
+  // const canonicalUrl = `http://localhost/${encodeURIComponent(slug)}/`;
 
   if (!blog) {
     return {

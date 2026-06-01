@@ -83,7 +83,7 @@ function inputClass(error, touched, value) {
   return `${base} border-green-400 focus:ring-green-400 focus:border-green-400`;
 }
 
-export default function AdminBlogPanel() {
+export default function AdminBlogForm() {
   const [blogs, setBlogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -113,11 +113,21 @@ export default function AdminBlogPanel() {
   // image-specific state
   const [imagePreview, setImagePreview] = useState(null);
   const [imageSizeWarning, setImageSizeWarning] = useState('');
+  // Holds HTML to inject into the editor once the modal DOM is mounted
+  const [pendingEditorContent, setPendingEditorContent] = useState(null);
 
   // const API_BASE_URL = "http://localhost/gr8/api/blogs";
-  const API_BASE_URL = "https://api.gr8.com.np/gr8/api/blogs";
+    const API_BASE_URL = "https://api.gr8.com.np/gr8/api/blogs";
 
   useEffect(() => { fetchBlogs(); }, []);
+
+  // Inject content into the editor after modal is open and ref is attached
+  useEffect(() => {
+    if (showModal && pendingEditorContent !== null && contentEditorRef.current) {
+      contentEditorRef.current.innerHTML = pendingEditorContent;
+      setPendingEditorContent(null);
+    }
+  }, [showModal, pendingEditorContent]);
 
   // Revalidate a field whenever formData changes for that field
   useEffect(() => {
@@ -155,6 +165,14 @@ export default function AdminBlogPanel() {
 
   const generateSlug = (title) =>
     title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    // Get plain text from clipboard (strips all foreign styling)
+    const text = e.clipboardData.getData('text/plain');
+    // Insert as plain text at cursor position
+    document.execCommand('insertText', false, text);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -271,11 +289,9 @@ export default function AdminBlogPanel() {
     setShowModal(true);
     setTouched({});
     setSubmitAttempted(false);
-    setImagePreview(null);
+    setImagePreview(blog.image || null);
     setImageSizeWarning('');
-    setTimeout(() => {
-      if (contentEditorRef.current) contentEditorRef.current.innerHTML = blog.content || '';
-    }, 100);
+    setPendingEditorContent(blog.content || '');
   };
 
   const formatDateForInput = (dateStr) => {
@@ -316,6 +332,7 @@ export default function AdminBlogPanel() {
     setMessage({ type:'', text:'' });
     setImagePreview(null);
     setImageSizeWarning('');
+    setPendingEditorContent(null);
     if (contentEditorRef.current) contentEditorRef.current.innerHTML = '';
   };
 
@@ -610,7 +627,7 @@ export default function AdminBlogPanel() {
                       </div>
                       <div
                         ref={contentEditorRef}
-                        contentEditable onInput={handleContentChange}
+                        contentEditable onInput={handleContentChange} onPaste={handlePaste}
                         className="w-full min-h-30 bg-white rounded-b-lg px-3 py-3 text-gray-900 text-sm focus:outline-none overflow-y-auto"
                         style={{ maxHeight: '300px' }}
                       />

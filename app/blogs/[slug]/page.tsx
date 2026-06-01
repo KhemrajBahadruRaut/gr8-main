@@ -5,6 +5,7 @@ import { cache } from "react";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import styles from "./blog-content.module.css";
 
+// const BLOG_API_URL = "http://localhost/gr8/api/blogs/get_blog.php";
 const BLOG_API_URL = "https://api.gr8.com.np/gr8/api/blogs/get_blog.php";
 const DEFAULT_OG_IMAGE =
   "https://gr8.com.np/mainlogo/GR8-Nepal-Private-Limited-Logo.webp";
@@ -51,7 +52,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
-  const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
+  // const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
+  const canonicalUrl = `http://localhost/${encodeURIComponent(slug)}/`;
 
   if (!blog) {
     return {

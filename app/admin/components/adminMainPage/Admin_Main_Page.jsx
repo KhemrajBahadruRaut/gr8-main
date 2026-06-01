@@ -266,7 +266,7 @@ const Admin_Main_Page = () => {
               >
                 <div className="relative">
                   <Image
-                    src="/mainlogo/GR8-Nepal-private-Limited-Logo.webp"
+                    src="/mainlogo/GR8-Nepal-Private-Limited-Logo.webp"
                     width={40}
                     height={40}
                     alt="GR8 Nepal Private Limited"

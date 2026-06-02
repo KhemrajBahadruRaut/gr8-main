@@ -82,13 +82,30 @@ function inputClass(error, touched, value) {
   return `${base} border-green-400 focus:ring-green-400 focus:border-green-400`;
 }
 
-// ─── FIX 1: Normalize tags from DB (handles JSON arrays or plain strings) ───
+// Normalize tags from DB (handles JSON arrays or plain strings)
 const normalizeTags = (raw) => {
   if (!raw) return '';
+  
+  // If it's already a string with commas, return as is
+  if (typeof raw === 'string' && raw.includes(',')) {
+    return raw;
+  }
+  
+  // Try to parse JSON
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed.join(', ');
-  } catch {}
+    if (Array.isArray(parsed)) {
+      return parsed.join(', ');
+    }
+    // If parsed is a string, return it
+    if (typeof parsed === 'string') {
+      return parsed;
+    }
+  } catch(e) {
+    // Not JSON, continue
+  }
+  
+  // If it's a plain string without commas, return as is
   return raw;
 };
 
@@ -121,7 +138,7 @@ export default function AdminBlogForm() {
   const [imageSizeWarning, setImageSizeWarning] = useState('');
   const [pendingEditorContent, setPendingEditorContent] = useState(null);
 
-  // ─── FIX 2: Auto-detect API URL by hostname — no build tools needed ───
+  // Auto-detect API URL by hostname
   const API_BASE_URL =
     window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost/gr8/api/blogs'
@@ -129,7 +146,7 @@ export default function AdminBlogForm() {
 
   useEffect(() => { fetchBlogs(); }, []);
 
-  // ─── FIX 3: Poll until contenteditable ref is in DOM (fixes production timing) ───
+  // Poll until contenteditable ref is in DOM
   useEffect(() => {
     if (!showModal || pendingEditorContent === null) return;
     let tries = 0;
@@ -138,7 +155,7 @@ export default function AdminBlogForm() {
         contentEditorRef.current.innerHTML = pendingEditorContent;
         setPendingEditorContent(null);
         clearInterval(interval);
-      } else if (++tries > 20) {
+      } else if (++tries > 30) {
         clearInterval(interval);
       }
     }, 50);
@@ -166,6 +183,7 @@ export default function AdminBlogForm() {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/get_blog.php`);
       const data = await response.json();
+      
       if (data.success && Array.isArray(data.blogs)) {
         setBlogs(data.blogs.filter(Boolean).map(blog => ({
           id: blog.id || '',
@@ -174,14 +192,15 @@ export default function AdminBlogForm() {
           description: blog.description || '',
           content: blog.content || '',
           image: blog.image || '',
-          tags: normalizeTags(blog.tags),   // ← FIX 1 applied
+          tags: normalizeTags(blog.tags),
           date: blog.date || '',
           read_time: blog.read_time || ''
         })));
       } else {
         setBlogs([]);
       }
-    } catch {
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
       setBlogs([]);
     } finally {
       setLoading(false);
@@ -299,6 +318,12 @@ export default function AdminBlogForm() {
   };
 
   const handleEdit = (blog) => {
+    // Reset any previous pending content
+    setPendingEditorContent(null);
+    
+    // Normalize tags before setting form data
+    const normalizedTags = normalizeTags(blog.tags);
+    
     setFormData({
       id: blog.id || '',
       title: blog.title || '',
@@ -306,17 +331,22 @@ export default function AdminBlogForm() {
       description: blog.description || '',
       content: blog.content || '',
       imageFile: null,
-      tags: normalizeTags(blog.tags),   // ← FIX 1 applied
+      tags: normalizedTags,
       date: blog.date ? formatDateForInput(blog.date) : new Date().toISOString().split('T')[0],
       read_time: blog.read_time || ''
     });
+    
     setEditMode(true);
     setShowModal(true);
     setTouched({});
     setSubmitAttempted(false);
     setImagePreview(blog.image || null);
     setImageSizeWarning('');
-    setPendingEditorContent(blog.content || '');
+    
+    // Set the content after a short delay to ensure DOM is ready
+    setTimeout(() => {
+      setPendingEditorContent(blog.content || '');
+    }, 100);
   };
 
   const formatDateForInput = (dateStr) => {
@@ -353,7 +383,10 @@ export default function AdminBlogForm() {
   };
 
   const resetForm = () => {
-    setFormData({ id: '', title: '', slug: '', description: '', content: '', imageFile: null, tags: '', date: new Date().toISOString().split('T')[0], read_time: '' });
+    setFormData({ 
+      id: '', title: '', slug: '', description: '', content: '', 
+      imageFile: null, tags: '', date: new Date().toISOString().split('T')[0], read_time: '' 
+    });
     setEditMode(false);
     setTouched({});
     setErrors({});
@@ -423,14 +456,14 @@ export default function AdminBlogForm() {
             { label: 'This Month', value: 0, icon: <Calendar className="w-5 h-5 text-green-600" />, bg: 'bg-green-50' },
             { label: 'Drafts', value: 0, icon: <FileText className="w-5 h-5 text-yellow-600" />, bg: 'bg-yellow-50' },
             { label: 'Published', value: blogs.length, icon: <FileText className="w-5 h-5 text-purple-600" />, bg: 'bg-purple-50' },
-          ].map(({ label, value, icon, bg }) => (
-            <div key={label} className="bg-white rounded-lg border border-gray-200 p-4">
+          ].map((item) => (
+            <div key={item.label} className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">{label}</p>
-                  <p className="text-2xl font-semibold text-gray-900">{value}</p>
+                  <p className="text-sm text-gray-600">{item.label}</p>
+                  <p className="text-2xl font-semibold text-gray-900">{item.value}</p>
                 </div>
-                <div className={`p-2 ${bg} rounded-lg`}>{icon}</div>
+                <div className={`p-2 ${item.bg} rounded-lg`}>{item.icon}</div>
               </div>
             </div>
           ))}
@@ -637,10 +670,9 @@ export default function AdminBlogForm() {
                         </div>
                         <div className="w-px bg-gray-300 mx-1"></div>
                         <div className="flex items-center gap-1">
-                          {[['bold', <Bold className="w-3.5 h-3.5" />, 'Bold'], ['italic', <Italic className="w-3.5 h-3.5" />, 'Italic'], ['underline', <Underline className="w-3.5 h-3.5" />, 'Underline']].map(([cmd, icon, title]) => (
-                            <button key={cmd} type="button" onClick={() => applyFormatting(cmd)}
-                              className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title={title}>{icon}</button>
-                          ))}
+                          <button type="button" onClick={() => applyFormatting('bold')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Bold"><Bold className="w-3.5 h-3.5" /></button>
+                          <button type="button" onClick={() => applyFormatting('italic')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Italic"><Italic className="w-3.5 h-3.5" /></button>
+                          <button type="button" onClick={() => applyFormatting('underline')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Underline"><Underline className="w-3.5 h-3.5" /></button>
                         </div>
                         <div className="w-px bg-gray-300 mx-1"></div>
                         <div className="flex items-center gap-1">
@@ -652,7 +684,9 @@ export default function AdminBlogForm() {
                       </div>
                       <div
                         ref={contentEditorRef}
-                        contentEditable onInput={handleContentChange} onPaste={handlePaste}
+                        contentEditable
+                        onInput={handleContentChange}
+                        onPaste={handlePaste}
                         className="w-full min-h-30 bg-white rounded-b-lg px-3 py-3 text-gray-900 text-sm focus:outline-none overflow-y-auto"
                         style={{ maxHeight: '300px' }}
                       />

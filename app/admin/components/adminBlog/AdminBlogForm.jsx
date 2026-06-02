@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, Search, X, Save, Bold, Italic, Underline, List, ListOrdered, Link2, Calendar, Clock, Tag, Image as ImageIcon, FileText, MoreVertical, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-// ── Toast ────────────────────────────────────────────────────────────────────
+// Toast
 function ToastContainer({ toasts, onDismiss }) {
   return (
     <div className="fixed top-4 right-4 z-9999 flex flex-col gap-2 pointer-events-none">
@@ -50,7 +50,6 @@ const VALIDATION_RULES = {
 function validateField(name, value) {
   const rule = VALIDATION_RULES[name];
   if (!rule) return null;
-
   if (rule.required && !value?.trim()) return 'This field is required';
   if (value && rule.minLength && value.trim().length < rule.minLength)
     return `Minimum ${rule.minLength} characters required`;
@@ -83,6 +82,16 @@ function inputClass(error, touched, value) {
   return `${base} border-green-400 focus:ring-green-400 focus:border-green-400`;
 }
 
+// ─── FIX 1: Normalize tags from DB (handles JSON arrays or plain strings) ───
+const normalizeTags = (raw) => {
+  if (!raw) return '';
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed.join(', ');
+  } catch {}
+  return raw;
+};
+
 export default function AdminBlogForm() {
   const [blogs, setBlogs] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -106,30 +115,36 @@ export default function AdminBlogForm() {
     imageFile: null, tags: '', date: new Date().toISOString().split('T')[0], read_time: ''
   });
 
-  // touched tracks which fields user has interacted with
   const [touched, setTouched] = useState({});
-  // errors holds current validation errors
   const [errors, setErrors] = useState({});
-  // image-specific state
   const [imagePreview, setImagePreview] = useState(null);
   const [imageSizeWarning, setImageSizeWarning] = useState('');
-  // Holds HTML to inject into the editor once the modal DOM is mounted
   const [pendingEditorContent, setPendingEditorContent] = useState(null);
 
-  // const API_BASE_URL = "http://localhost/gr8/api/blogs";
-    const API_BASE_URL = "https://api.gr8.com.np/gr8/api/blogs";
+  // ─── FIX 2: Auto-detect API URL by hostname — no build tools needed ───
+  const API_BASE_URL =
+    window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost/gr8/api/blogs'
+      : 'https://api.gr8.com.np/gr8/api/blogs';
 
   useEffect(() => { fetchBlogs(); }, []);
 
-  // Inject content into the editor after modal is open and ref is attached
+  // ─── FIX 3: Poll until contenteditable ref is in DOM (fixes production timing) ───
   useEffect(() => {
-    if (showModal && pendingEditorContent !== null && contentEditorRef.current) {
-      contentEditorRef.current.innerHTML = pendingEditorContent;
-      setPendingEditorContent(null);
-    }
+    if (!showModal || pendingEditorContent === null) return;
+    let tries = 0;
+    const interval = setInterval(() => {
+      if (contentEditorRef.current) {
+        contentEditorRef.current.innerHTML = pendingEditorContent;
+        setPendingEditorContent(null);
+        clearInterval(interval);
+      } else if (++tries > 20) {
+        clearInterval(interval);
+      }
+    }, 50);
+    return () => clearInterval(interval);
   }, [showModal, pendingEditorContent]);
 
-  // Revalidate a field whenever formData changes for that field
   useEffect(() => {
     const newErrors = {};
     Object.keys(VALIDATION_RULES).forEach(field => {
@@ -153,14 +168,24 @@ export default function AdminBlogForm() {
       const data = await response.json();
       if (data.success && Array.isArray(data.blogs)) {
         setBlogs(data.blogs.filter(Boolean).map(blog => ({
-          id: blog.id || '', title: blog.title || 'Untitled', slug: blog.slug || '',
-          description: blog.description || '', content: blog.content || '',
-          image: blog.image || '', tags: blog.tags || '',
-          date: blog.date || '', read_time: blog.read_time || ''
+          id: blog.id || '',
+          title: blog.title || 'Untitled',
+          slug: blog.slug || '',
+          description: blog.description || '',
+          content: blog.content || '',
+          image: blog.image || '',
+          tags: normalizeTags(blog.tags),   // ← FIX 1 applied
+          date: blog.date || '',
+          read_time: blog.read_time || ''
         })));
-      } else { setBlogs([]); }
-    } catch { setBlogs([]); }
-    finally { setLoading(false); }
+      } else {
+        setBlogs([]);
+      }
+    } catch {
+      setBlogs([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const generateSlug = (title) =>
@@ -168,9 +193,7 @@ export default function AdminBlogForm() {
 
   const handlePaste = (e) => {
     e.preventDefault();
-    // Get plain text from clipboard (strips all foreign styling)
     const text = e.clipboardData.getData('text/plain');
-    // Insert as plain text at cursor position
     document.execCommand('insertText', false, text);
   };
 
@@ -220,7 +243,6 @@ export default function AdminBlogForm() {
     setImagePreview(null);
     if (!file) { setFormData(prev => ({ ...prev, imageFile: null })); return; }
 
-    // Generate preview
     const reader = new FileReader();
     reader.onload = (ev) => setImagePreview(ev.target.result);
     reader.readAsDataURL(file);
@@ -245,7 +267,6 @@ export default function AdminBlogForm() {
     e.preventDefault();
     setSubmitAttempted(true);
 
-    // Touch all fields to show all errors
     const allTouched = Object.keys(VALIDATION_RULES).reduce((acc, k) => ({ ...acc, [k]: true }), { imageFile: true });
     setTouched(allTouched);
 
@@ -256,7 +277,7 @@ export default function AdminBlogForm() {
 
     try {
       const fd = new FormData();
-      ['id','title','slug','description','content','tags','date','read_time'].forEach(k => fd.append(k, formData[k]));
+      ['id', 'title', 'slug', 'description', 'content', 'tags', 'date', 'read_time'].forEach(k => fd.append(k, formData[k]));
       if (formData.imageFile) fd.append('image_file', formData.imageFile);
 
       const endpoint = editMode ? 'update_blog.php' : 'add_blog.php';
@@ -279,9 +300,13 @@ export default function AdminBlogForm() {
 
   const handleEdit = (blog) => {
     setFormData({
-      id: blog.id || '', title: blog.title || '', slug: blog.slug || '',
-      description: blog.description || '', content: blog.content || '',
-      imageFile: null, tags: blog.tags || '',
+      id: blog.id || '',
+      title: blog.title || '',
+      slug: blog.slug || '',
+      description: blog.description || '',
+      content: blog.content || '',
+      imageFile: null,
+      tags: normalizeTags(blog.tags),   // ← FIX 1 applied
       date: blog.date ? formatDateForInput(blog.date) : new Date().toISOString().split('T')[0],
       read_time: blog.read_time || ''
     });
@@ -302,11 +327,13 @@ export default function AdminBlogForm() {
       const months = { Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12' };
       const parts = dateStr.replace(/\d+(st|nd|rd|th)/, '').trim().split(' ');
       const dayMatch = dateStr.match(/\d+/);
-      const day = dayMatch ? dayMatch[0].padStart(2,'0') : '01';
-      const month = months[parts[0]?.replace(',','')] || '01';
-      const year = parts[1]?.replace(',','') || new Date().getFullYear().toString();
+      const day = dayMatch ? dayMatch[0].padStart(2, '0') : '01';
+      const month = months[parts[0]?.replace(',', '')] || '01';
+      const year = parts[1]?.replace(',', '') || new Date().getFullYear().toString();
       return `${year}-${month}-${day}`;
-    } catch { return new Date().toISOString().split('T')[0]; }
+    } catch {
+      return new Date().toISOString().split('T')[0];
+    }
   };
 
   const handleDelete = async (id) => {
@@ -320,16 +347,18 @@ export default function AdminBlogForm() {
         showToast('success', 'Blog deleted successfully!');
         fetchBlogs();
       }
-    } catch { setMessage({ type: 'error', text: 'Error deleting blog' }); }
+    } catch {
+      setMessage({ type: 'error', text: 'Error deleting blog' });
+    }
   };
 
   const resetForm = () => {
-    setFormData({ id:'', title:'', slug:'', description:'', content:'', imageFile:null, tags:'', date: new Date().toISOString().split('T')[0], read_time:'' });
+    setFormData({ id: '', title: '', slug: '', description: '', content: '', imageFile: null, tags: '', date: new Date().toISOString().split('T')[0], read_time: '' });
     setEditMode(false);
     setTouched({});
     setErrors({});
     setSubmitAttempted(false);
-    setMessage({ type:'', text:'' });
+    setMessage({ type: '', text: '' });
     setImagePreview(null);
     setImageSizeWarning('');
     setPendingEditorContent(null);
@@ -339,12 +368,11 @@ export default function AdminBlogForm() {
   const filteredBlogs = blogs.filter(blog => {
     if (!blog) return false;
     const search = searchTerm.toLowerCase();
-    return (blog.title||'').toLowerCase().includes(search) || (blog.tags||'').toLowerCase().includes(search);
+    return (blog.title || '').toLowerCase().includes(search) || (blog.tags || '').toLowerCase().includes(search);
   });
 
-  // Helper: should we show error for a field?
   const showError = (field) => (touched[field] || submitAttempted) && errors[field];
-  const showSuccess = (field) => (touched[field] || submitAttempted) && !errors[field] && (formData[field]||'').trim();
+  const showSuccess = (field) => (touched[field] || submitAttempted) && !errors[field] && (formData[field] || '').trim();
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
@@ -378,12 +406,12 @@ export default function AdminBlogForm() {
           </div>
         </div>
 
-        {/* Page-level error alert (non-modal errors only) */}
+        {/* Page-level error */}
         {message.text && message.type === 'error' && (
           <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700">
             <div className="flex items-center">
               <div className="flex-1">{message.text}</div>
-              <button onClick={() => setMessage({ type:'', text:'' })}><X className="w-4 h-4" /></button>
+              <button onClick={() => setMessage({ type: '', text: '' })}><X className="w-4 h-4" /></button>
             </div>
           </div>
         )}
@@ -391,10 +419,10 @@ export default function AdminBlogForm() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           {[
-            { label:'Total Posts', value:blogs.length, icon:<FileText className="w-5 h-5 text-blue-600"/>, bg:'bg-blue-50' },
-            { label:'This Month', value:0, icon:<Calendar className="w-5 h-5 text-green-600"/>, bg:'bg-green-50' },
-            { label:'Drafts', value:0, icon:<FileText className="w-5 h-5 text-yellow-600"/>, bg:'bg-yellow-50' },
-            { label:'Published', value:blogs.length, icon:<FileText className="w-5 h-5 text-purple-600"/>, bg:'bg-purple-50' },
+            { label: 'Total Posts', value: blogs.length, icon: <FileText className="w-5 h-5 text-blue-600" />, bg: 'bg-blue-50' },
+            { label: 'This Month', value: 0, icon: <Calendar className="w-5 h-5 text-green-600" />, bg: 'bg-green-50' },
+            { label: 'Drafts', value: 0, icon: <FileText className="w-5 h-5 text-yellow-600" />, bg: 'bg-yellow-50' },
+            { label: 'Published', value: blogs.length, icon: <FileText className="w-5 h-5 text-purple-600" />, bg: 'bg-purple-50' },
           ].map(({ label, value, icon, bg }) => (
             <div key={label} className="bg-white rounded-lg border border-gray-200 p-4">
               <div className="flex items-center justify-between">
@@ -431,7 +459,7 @@ export default function AdminBlogForm() {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    {['Post','Status','Tags','Date','Actions'].map(h => (
+                    {['Post', 'Status', 'Tags', 'Date', 'Actions'].map(h => (
                       <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
@@ -439,14 +467,14 @@ export default function AdminBlogForm() {
                 <tbody className="divide-y divide-gray-200">
                   {filteredBlogs.map((blog) => {
                     if (!blog) return null;
-                    const b = { id:blog.id||'', title:blog.title||'Untitled', image:blog.image||'', read_time:blog.read_time||'', tags:blog.tags||'', date:blog.date||'' };
+                    const b = { id: blog.id || '', title: blog.title || 'Untitled', image: blog.image || '', read_time: blog.read_time || '', tags: blog.tags || '', date: blog.date || '' };
                     return (
                       <tr key={b.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             {b.image ? (
                               <img src={b.image} alt={b.title} className="w-12 h-12 object-cover rounded-lg"
-                                onError={(e) => { e.target.style.display='none'; }}
+                                onError={(e) => { e.target.style.display = 'none'; }}
                               />
                             ) : (
                               <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -468,11 +496,11 @@ export default function AdminBlogForm() {
                           <div className="flex flex-wrap gap-1 max-w-50">
                             {b.tags ? (
                               <>
-                                {b.tags.split(',').slice(0,2).map((tag,idx) => (
+                                {b.tags.split(',').slice(0, 2).map((tag, idx) => (
                                   <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">{tag.trim()}</span>
                                 ))}
                                 {b.tags.split(',').length > 2 && (
-                                  <span className="px-2 py-1 text-gray-500 text-xs">+{b.tags.split(',').length-2}</span>
+                                  <span className="px-2 py-1 text-gray-500 text-xs">+{b.tags.split(',').length - 2}</span>
                                 )}
                               </>
                             ) : <span className="px-2 py-1 text-gray-400 text-xs italic">No tags</span>}
@@ -486,9 +514,6 @@ export default function AdminBlogForm() {
                             </button>
                             <button onClick={() => handleDelete(b.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Delete">
                               <Trash2 className="w-4 h-4" />
-                            </button>
-                            <button className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
-                              <MoreVertical className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -524,7 +549,7 @@ export default function AdminBlogForm() {
                 </button>
               </div>
 
-              {/* Validation summary banner shown only on submit attempt with errors */}
+              {/* Validation summary */}
               {submitAttempted && Object.keys(errors).length > 0 && (
                 <div className="mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
@@ -605,25 +630,25 @@ export default function AdminBlogForm() {
                       {/* Toolbar */}
                       <div className="bg-gray-50 border-b border-inherit rounded-t-lg px-2 py-1.5 flex flex-wrap gap-1">
                         <div className="flex items-center gap-1">
-                          {[1,2,3].map(l => (
+                          {[1, 2, 3].map(l => (
                             <button key={l} type="button" onClick={() => applyHeading(l)}
                               className="px-2 py-1 hover:bg-gray-200 rounded text-gray-700 text-xs font-semibold transition-colors">H{l}</button>
                           ))}
                         </div>
                         <div className="w-px bg-gray-300 mx-1"></div>
                         <div className="flex items-center gap-1">
-                          {[['bold',<Bold className="w-3.5 h-3.5"/>,'Bold'],['italic',<Italic className="w-3.5 h-3.5"/>,'Italic'],['underline',<Underline className="w-3.5 h-3.5"/>,'Underline']].map(([cmd,icon,title]) => (
+                          {[['bold', <Bold className="w-3.5 h-3.5" />, 'Bold'], ['italic', <Italic className="w-3.5 h-3.5" />, 'Italic'], ['underline', <Underline className="w-3.5 h-3.5" />, 'Underline']].map(([cmd, icon, title]) => (
                             <button key={cmd} type="button" onClick={() => applyFormatting(cmd)}
                               className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title={title}>{icon}</button>
                           ))}
                         </div>
                         <div className="w-px bg-gray-300 mx-1"></div>
                         <div className="flex items-center gap-1">
-                          <button type="button" onClick={() => applyFormatting('insertUnorderedList')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Bullet List"><List className="w-3.5 h-3.5"/></button>
-                          <button type="button" onClick={() => applyFormatting('insertOrderedList')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Numbered List"><ListOrdered className="w-3.5 h-3.5"/></button>
+                          <button type="button" onClick={() => applyFormatting('insertUnorderedList')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Bullet List"><List className="w-3.5 h-3.5" /></button>
+                          <button type="button" onClick={() => applyFormatting('insertOrderedList')} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Numbered List"><ListOrdered className="w-3.5 h-3.5" /></button>
                         </div>
                         <div className="w-px bg-gray-300 mx-1"></div>
-                        <button type="button" onClick={insertLink} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Insert Link"><Link2 className="w-3.5 h-3.5"/></button>
+                        <button type="button" onClick={insertLink} className="p-1 hover:bg-gray-200 rounded text-gray-700 transition-colors" title="Insert Link"><Link2 className="w-3.5 h-3.5" /></button>
                       </div>
                       <div
                         ref={contentEditorRef}
@@ -667,7 +692,6 @@ export default function AdminBlogForm() {
                       </label>
                     </div>
 
-                    {/* Image preview + size warning below the upload area */}
                     {(imagePreview || imageSizeWarning) && (
                       <div className="mt-3 space-y-2">
                         {imagePreview && (
@@ -699,7 +723,7 @@ export default function AdminBlogForm() {
                         {!imageSizeWarning && formData.imageFile && (
                           <p className="flex items-center gap-1 text-xs text-green-600">
                             <CheckCircle2 className="w-3.5 h-3.5" />
-                            Image looks good ({(formData.imageFile.size / (1024*1024)).toFixed(2)} MB)
+                            Image looks good ({(formData.imageFile.size / (1024 * 1024)).toFixed(2)} MB)
                           </p>
                         )}
                       </div>
@@ -767,12 +791,11 @@ export default function AdminBlogForm() {
 
               {/* Modal Footer */}
               <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between gap-3">
-                {/* Live validity indicator */}
                 <div className="text-xs text-gray-500">
                   {isFormValid()
-                    ? <span className="flex items-center gap-1 text-green-600"><CheckCircle2 className="w-3.5 h-3.5"/>All fields valid</span>
+                    ? <span className="flex items-center gap-1 text-green-600"><CheckCircle2 className="w-3.5 h-3.5" />All fields valid</span>
                     : submitAttempted
-                      ? <span className="flex items-center gap-1 text-red-500"><AlertCircle className="w-3.5 h-3.5"/>{Object.keys(errors).length} error{Object.keys(errors).length > 1 ? 's' : ''} remaining</span>
+                      ? <span className="flex items-center gap-1 text-red-500"><AlertCircle className="w-3.5 h-3.5" />{Object.keys(errors).length} error{Object.keys(errors).length > 1 ? 's' : ''} remaining</span>
                       : <span className="text-gray-400">Fill all required fields</span>
                   }
                 </div>

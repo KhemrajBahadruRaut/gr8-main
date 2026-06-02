@@ -1,8 +1,8 @@
 "use client";
-import React from 'react';
-import { Calendar, Clock, ArrowLeft, Share2, Bookmark } from 'lucide-react';
-import Link from 'next/link';
-import Head from 'next/head';
+import React from "react";
+import { Calendar, Clock, ArrowLeft, Share2, Bookmark } from "lucide-react";
+import Link from "next/link";
+import Head from "next/head";
 
 interface Blog {
   id: number;
@@ -19,29 +19,31 @@ interface Blog {
 
 interface BlogDetailPageProps {
   slug: string;
-  blog: Blog; 
+  blog: Blog;
 }
 
 export default function BlogDetailPage({ slug, blog }: BlogDetailPageProps) {
   if (!blog) return <p>Blog not found</p>;
 
-  const tags = blog.tags.split(',').map(tag => tag.trim());
+  const tags = blog.tags.split(",").map((tag) => tag.trim());
 
   const handleShare = () => {
     if (navigator.share && blog) {
-      navigator.share({
-        title: blog.title,
-        text: blog.description,
-        url: window.location.href,
-      }).catch(() => {
-        navigator.clipboard.writeText(window.location.href);
-        alert('Link copied to clipboard!');
-      });
+      navigator
+        .share({
+          title: blog.title,
+          text: blog.description,
+          url: window.location.href,
+        })
+        .catch(() => {
+          navigator.clipboard.writeText(window.location.href);
+          alert("Link copied to clipboard!");
+        });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      alert("Link copied to clipboard!");
     }
-  };  
+  };
 
   return (
     <>
@@ -99,16 +101,16 @@ export default function BlogDetailPage({ slug, blog }: BlogDetailPageProps) {
               </div>
             </header>
 
-            <div className="mb-8 rounded-2xl overflow-hidden">
+            <div className="mb-8 rounded-2xl overflow-hidden bg-slate-900">
               <img
                 src={blog.image}
                 alt={blog.title}
-                className="w-full h-100 object-cover"
+                className="w-full h-auto object-contain"
               />
             </div>
 
             <div className="flex gap-4 mb-12">
-              <button 
+              <button
                 onClick={handleShare}
                 className="flex items-center gap-2 px-6 py-3 bg-slate-800/50 border border-slate-700 rounded-full hover:bg-slate-700/50 transition-colors"
               >
@@ -131,30 +133,125 @@ export default function BlogDetailPage({ slug, blog }: BlogDetailPageProps) {
 
       {/* Styles (unchanged from your code) */}
       <style jsx global>{`
-        .blog-content { word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; }
-        .blog-content h1 { font-size: 2em; font-weight: bold; margin: 1em 0 0.67em 0; line-height: 1; color: #ffffff; }
-        .blog-content h2 { font-size: 1.5em; font-weight: bold; margin: 1.3em 0 0.75em 0; line-height: 1; color: #ffffff; }
-        .blog-content h3 { font-size: 1.17em; font-weight: bold; margin: 1.2em 0 0.83em 0; line-height: 1; color: #ffffff; }
-        .blog-content p { margin: 1em 0; line-height: 1.2; color: #d1d5db; }
-        .blog-content ul, .blog-content ol { margin: 1em 0; padding-left: 2em; }
-        .blog-content ul { list-style-type: disc; }
-        .blog-content ol { list-style-type: decimal; }
-        .blog-content li { margin: 0.5em 0; line-height: 1.8; color: #d1d5db; }
-        .blog-content a { color: #34d399; text-decoration: underline; transition: color 0.2s; }
-        .blog-content a:hover { color: #10b981; }
-        .blog-content strong { font-weight: bold; color: #ffffff; }
-        .blog-content em { font-style: italic; }
-        .blog-content u { text-decoration: underline; }
-        .blog-content blockquote { border-left: 4px solid #34d399; padding-left: 1.5em; margin: 1.5em 0; font-style: italic; color: #9ca3af; }
-        .blog-content code { background-color: #1e293b; padding: 0.2em 0.4em; border-radius: 0.25rem; font-size: 0.9em; color: #34d399; }
-        .blog-content pre { background-color: #1e293b; padding: 1em; border-radius: 0.5rem; overflow-x: auto; margin: 1.5em 0; }
-        .blog-content pre code { background-color: transparent; padding: 0; }
-        .blog-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1.5em 0; }
-        .blog-content hr { border: none; border-top: 1px solid #374151; margin: 2em 0; }
-        .blog-content * { max-width: 100%; }
-        .blog-content table { width: 100%; border-collapse: collapse; margin: 1.5em 0; }
-        .blog-content th, .blog-content td { border: 1px solid #374151; padding: 0.75em; text-align: left; }
-        .blog-content th { background-color: #1e293b; font-weight: bold; }
+        .blog-content {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+        }
+        .blog-content h1 {
+          font-size: 2em;
+          font-weight: bold;
+          margin: 1em 0 0.67em 0;
+          line-height: 1;
+          color: #ffffff;
+        }
+        .blog-content h2 {
+          font-size: 1.5em;
+          font-weight: bold;
+          margin: 1.3em 0 0.75em 0;
+          line-height: 1;
+          color: #ffffff;
+        }
+        .blog-content h3 {
+          font-size: 1.17em;
+          font-weight: bold;
+          margin: 1.2em 0 0.83em 0;
+          line-height: 1;
+          color: #ffffff;
+        }
+        .blog-content p {
+          margin: 1em 0;
+          line-height: 1.2;
+          color: #d1d5db;
+        }
+        .blog-content ul,
+        .blog-content ol {
+          margin: 1em 0;
+          padding-left: 2em;
+        }
+        .blog-content ul {
+          list-style-type: disc;
+        }
+        .blog-content ol {
+          list-style-type: decimal;
+        }
+        .blog-content li {
+          margin: 0.5em 0;
+          line-height: 1.8;
+          color: #d1d5db;
+        }
+        .blog-content a {
+          color: #34d399;
+          text-decoration: underline;
+          transition: color 0.2s;
+        }
+        .blog-content a:hover {
+          color: #10b981;
+        }
+        .blog-content strong {
+          font-weight: bold;
+          color: #ffffff;
+        }
+        .blog-content em {
+          font-style: italic;
+        }
+        .blog-content u {
+          text-decoration: underline;
+        }
+        .blog-content blockquote {
+          border-left: 4px solid #34d399;
+          padding-left: 1.5em;
+          margin: 1.5em 0;
+          font-style: italic;
+          color: #9ca3af;
+        }
+        .blog-content code {
+          background-color: #1e293b;
+          padding: 0.2em 0.4em;
+          border-radius: 0.25rem;
+          font-size: 0.9em;
+          color: #34d399;
+        }
+        .blog-content pre {
+          background-color: #1e293b;
+          padding: 1em;
+          border-radius: 0.5rem;
+          overflow-x: auto;
+          margin: 1.5em 0;
+        }
+        .blog-content pre code {
+          background-color: transparent;
+          padding: 0;
+        }
+        .blog-content img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 0.5rem;
+          margin: 1.5em 0;
+        }
+        .blog-content hr {
+          border: none;
+          border-top: 1px solid #374151;
+          margin: 2em 0;
+        }
+        .blog-content * {
+          max-width: 100%;
+        }
+        .blog-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5em 0;
+        }
+        .blog-content th,
+        .blog-content td {
+          border: 1px solid #374151;
+          padding: 0.75em;
+          text-align: left;
+        }
+        .blog-content th {
+          background-color: #1e293b;
+          font-weight: bold;
+        }
       `}</style>
     </>
   );

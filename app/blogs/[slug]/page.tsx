@@ -7,9 +7,8 @@ import styles from "./blog-content.module.css";
 
 // const BLOG_API_URL = "http://localhost/gr8/api/blogs/get_blog.php";
 const BLOG_API_URL = "https://api.gr8.com.np/gr8/api/blogs/get_blog.php";
-
 const DEFAULT_OG_IMAGE =
-  "https://gr8.com.np/mainlogo/GR8-Nepal-Private-Limited-Logo.png";
+  "https://gr8.com.np/mainlogo/GR8-Nepal-Private-Limited-Logo.webp";
 
 type Blog = {
   title?: string;
@@ -48,13 +47,13 @@ const getBlogBySlug = cache(async (slug: string): Promise<Blog | null> => {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const slug = params.slug;
-
+  const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
   const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
+  // const canonicalUrl = `http://localhost/blogs/${encodeURIComponent(slug)}/`;
 
   if (!blog) {
     return {
@@ -74,9 +73,7 @@ export async function generateMetadata({
   const description =
     blog.description ||
     "Read this GR8 Nepal blog post for practical digital growth insights.";
-
   const image = blog.image || DEFAULT_OG_IMAGE;
-
   const publishedTime =
     blog.date || blog.created_at || new Date().toISOString();
 
@@ -111,10 +108,9 @@ export async function generateMetadata({
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const slug = params.slug;
-
+  const { slug } = await params;
   const blog = await getBlogBySlug(slug);
 
   if (!blog) {
@@ -123,9 +119,7 @@ export default async function BlogPostPage({
 
   const title = blog.title || "Blog";
   const description = blog.description || "";
-
   const image = blog.image || DEFAULT_OG_IMAGE;
-
   const tags = (blog.tags || "")
     .split(",")
     .map((tag) => tag.trim())
@@ -173,7 +167,6 @@ export default async function BlogPostPage({
                       <span>{blog.date}</span>
                     </div>
                   ) : null}
-
                   {blog.read_time ? (
                     <div className="flex items-center gap-2">
                       <Clock className="w-5 h-5" />
@@ -185,7 +178,11 @@ export default async function BlogPostPage({
             </header>
 
             <div className="mb-8 rounded-2xl overflow-hidden">
-              <img src={image} alt={title} className="w-full" />
+              <img
+                src={image}
+                alt={title}
+                className="w-full "
+              />
             </div>
 
             <div

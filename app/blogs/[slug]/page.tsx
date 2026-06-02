@@ -181,7 +181,7 @@ export default async function BlogPostPage({
               <img
                 src={image}
                 alt={title}
-                className="w-full h-100 object-cover"
+                className="w-full"
               />
             </div>
 

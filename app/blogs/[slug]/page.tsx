@@ -53,7 +53,7 @@ export async function generateMetadata({
   const blog = await getBlogBySlug(slug);
 
   const canonicalUrl = `https://gr8.com.np/blogs/${encodeURIComponent(slug)}/`;
-  // const canonicalUrl = `http://localhost/blogs/${encodeURIComponent(slug)}/`;
+  // const canonicalUrl = `http://localhost/${encodeURIComponent(slug)}/`;
 
   if (!blog) {
     return {
@@ -181,7 +181,7 @@ export default async function BlogPostPage({
               <img
                 src={image}
                 alt={title}
-                className="w-full "
+                className="w-full h-100 object-cover"
               />
             </div>
 

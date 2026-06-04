@@ -107,7 +107,7 @@ const Navbar = () => {
     {
       name: "Instagram",
       icon: <FaInstagram className="text-[15px] text-white" />,
-      link: "https://www.instagram.com/gr8digitalsolutions/",
+      link: "https://www.instagram.com/greight.official/",
       svg: "/icons/GR8-Nepal-ig.webp",
     },
     {

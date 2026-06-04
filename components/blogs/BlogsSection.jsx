@@ -8,7 +8,6 @@ export default function BlogsSection() {
   const headerRef = useRef(null);
   const blogsRef = useRef(null);
   const buttonRef = useRef(null);
-
   const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
   const blogsInView = useInView(blogsRef, { once: true, threshold: 0.2 });
   const buttonInView = useInView(buttonRef, { once: true, threshold: 0.3 });

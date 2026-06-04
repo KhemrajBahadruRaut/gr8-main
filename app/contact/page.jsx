@@ -69,7 +69,7 @@ const handleSubmit = async (e) => {
     {
       icon: Mail,
       title: 'Email Us',
-      details: ['management@gr8nepal.com'],
+      details: ['management@gr8.com.np'],
       color: 'emerald'
     },
     {

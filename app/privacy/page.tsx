@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
   ];
 
   return (
-    <div className=" bg-linear-to-b from-slate-900 to-slate-950 pt-25 px-6 relative overflow-hidden">
+    <div className=" bg-linear-to-b from-slate-900 to-slate-950 pt-30 px-6 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute top-20 left-10 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl animate-float"></div>
       <div className="absolute bottom-20 right-10 w-64 h-64 bg-slate-700/5 rounded-full blur-3xl animate-float-delayed"></div>

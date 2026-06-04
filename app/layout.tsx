@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://gr8.com.np"),
   title: {
     default: "G R Eight | Best Digital Marketing Agency in Nepal",
-    template: "%s | GR8 Pvt. Ltd.",
+    template: "%s | G R Eight Private Limited",
   },
   description:
     "G R Eight is a trusted digital marketing agency in Nepal offering SEO, web development, branding, graphic design, and marketing services.",
@@ -26,9 +26,9 @@ export const metadata: Metadata = {
     "Marketing Services in Nepal",
     "Mobile App Development",
   ],
-  authors: [{ name: "GR8 Pvt. Ltd." }],
-  creator: "GR8 Pvt. Ltd.",
-  publisher: "GR8 Pvt. Ltd.",
+  authors: [{ name: "G R Eight Private Limited" }],
+  creator: "G R Eight Private Limited",
+  publisher: "G R Eight Private Limited",
   robots: {
     index: true,
     follow: true,
@@ -41,17 +41,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "GR8 Pvt. Ltd. | Digital Solutions Company in Nepal",
+    title: "G R Eight Private Limited | Digital Solutions Company in Nepal",
     description:
       "We build modern digital products — websites, branding, and enterprise solutions that help businesses grow.",
     url: "https://gr8.com.np",
-    siteName: "GR8 Pvt. Ltd.",
+    siteName: "G R Eight Private Limited",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "GR8 Pvt. Ltd. - Digital Solutions Company in Nepal",
+        alt: "G R Eight Private Limited - Digital Solutions Company in Nepal",
       },
     ],
     locale: "en_US",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GR8 Pvt. Ltd. | Digital Solutions Company in Nepal",
+    title: "G R Eight Private Limited | Digital Solutions Company in Nepal",
     description:
       "We build modern digital products — websites, branding, and enterprise solutions that help businesses grow.",
     images: ["/og-image.jpg"],
@@ -77,11 +77,11 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "GR8 Pvt. Ltd.",
+  name: "G R Eight Private Limited",
   url: "https://gr8.com.np",
   logo: "https://gr8.com.np/mainlogo/gr8logo.png",
   description:
-    "GR8 Pvt. Ltd. is a leading digital solutions company in Nepal offering web development, mobile app development, UI/UX design, SEO, branding, and IT consulting services.",
+    "G R Eight Private Limited is a leading digital solutions company in Nepal offering web development, mobile app development, UI/UX design, SEO, branding, and IT consulting services.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "NP",

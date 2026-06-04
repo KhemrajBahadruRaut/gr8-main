@@ -60,24 +60,6 @@ const getStaticEntries = (): MetadataRoute.Sitemap => {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/merchendise/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/resources/help-center/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/services/web-development/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
       url: `${BASE_URL}/services/seo-services/`,
       lastModified,
       changeFrequency: "monthly",
@@ -95,66 +77,7 @@ const getStaticEntries = (): MetadataRoute.Sitemap => {
       changeFrequency: "monthly",
       priority: 0.9,
     },
-    {
-      url: `${BASE_URL}/services/content-writing/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/email-marketing/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/ppc/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/services/mobile-app-development/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/services/printing-publishing/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/blogs/digital-presence-2025/`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/blogs/future-digital-marketing/`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/blogs/online-presence-growth/`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/privacy/`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/terms-and-condition/`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+
   ];
 };
 

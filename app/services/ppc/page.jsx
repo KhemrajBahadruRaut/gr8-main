@@ -353,27 +353,29 @@ const PPCAdvertising = () => {
           >
             Ready to see immediate results from your advertising investment? Let's create PPC campaigns that deliver measurable ROI and sustainable growth for your business.
           </motion.p>
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            variants={containerVariants}
-          >
-            <motion.button 
-              className="px-8 py-3 bg-white text-black font-medium rounded-3xl hover:bg-gray-100 transition-colors"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              Get started today
-            </motion.button>
-            <motion.button 
-              className="px-8 py-3 bg-transparent border border-white text-white font-medium rounded-3xl hover:bg-white hover:text-black transition-colors"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-            >
-              Free PPC audit
-            </motion.button>
-          </motion.div>
+           <motion.div
+                      className="flex flex-col sm:flex-row gap-3 justify-center"
+                      variants={containerVariants}
+                    >
+                      <a href="/contact">
+                        <motion.button
+                          className="px-6 py-2.5 bg-white text-black text-sm font-medium rounded-2xl hover:bg-gray-100 transition-colors"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          Book a consultation
+                        </motion.button>
+                      </a>
+                      <a href="/portfolio">
+                        <motion.button
+                          className="px-6 py-2.5 bg-transparent border border-gray-600 text-white text-sm font-medium rounded-2xl hover:bg-white hover:text-black transition-colors"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          See our works
+                        </motion.button>
+                      </a>
+                    </motion.div>
         </motion.div>
       </motion.div>
     </div>

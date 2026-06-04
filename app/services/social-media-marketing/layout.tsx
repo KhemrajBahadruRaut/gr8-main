@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Social Media Marketing",
   description:
-    "Strategic social media marketing services in Nepal by GR8 Pvt. Ltd. Grow your brand presence on Facebook, Instagram, LinkedIn, and more with data-driven campaigns.",
+    "G R Eight offers social media marketing in Nepal to grow your brand on Facebook, Instagram, LinkedIn, and other platforms.",
   openGraph: {
-    title: "Social Media Marketing | GR8 Pvt. Ltd.",
+    title: "Social Media Marketing | G R Eight Private Limited",
     description:
-      "Grow your brand on social media with expert marketing strategies from GR8 Pvt. Ltd.",
+      "Grow your brand on social media with expert marketing strategies from G R Eight Private Limited",
     url: "https://gr8.com.np/services/social-media-marketing/",
   },
   alternates: {

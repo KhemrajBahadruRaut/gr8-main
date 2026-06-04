@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Email Marketing Services",
   description:
-    "Effective email marketing services in Nepal by GR8 Pvt. Ltd. Design engaging email campaigns, newsletters, and automated sequences that convert subscribers into customers.",
+    "G R Eight offers email marketing services in Nepal including campaigns, newsletters, and automation to boost engagement and conversions.",
   openGraph: {
-    title: "Email Marketing Services | GR8 Pvt. Ltd.",
+    title: "Email Marketing Services | G R Eight Private Limited",
     description:
-      "Drive conversions with targeted email marketing campaigns from GR8 Pvt. Ltd.",
+      "Drive conversions with targeted email marketing campaigns from G R Eight Private Limited",
     url: "https://gr8.com.np/services/email-marketing/",
   },
   alternates: {

@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with GR8 Pvt. Ltd. for web development, digital marketing, SEO, graphics design, and IT consulting services in Nepal. Let's discuss your project today.",
+    "Have a project in mind? Contact G R Eight for professional web development, digital marketing, SEO, design, and technology services.",
   openGraph: {
-    title: "Contact Us | GR8 Pvt. Ltd.",
+    title: "G R Eight Private Limited",
     description:
-      "Reach out to GR8 Pvt. Ltd. for all your digital solution needs. We're here to help your business grow.",
+      "Reach out to G R Eight Private Limited for all your digital solution needs. We're here to help your business grow.",
     url: "https://gr8.com.np/contact/",
   },
   alternates: {

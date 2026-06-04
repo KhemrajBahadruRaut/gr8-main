@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Read the privacy policy of GR8 Pvt. Ltd. Learn how we collect, use, and protect your personal data when you use our website and services.",
+    "Read the privacy policy of G R Eight Private Limited Learn how we collect, use, and protect your personal data when you use our website and services.",
   openGraph: {
-    title: "Privacy Policy | GR8 Pvt. Ltd.",
+    title: "Privacy Policy | G R Eight Private Limited",
     description:
-      "Learn how GR8 Pvt. Ltd. handles your personal data and privacy.",
+      "Learn how G R Eight Private Limited handles your personal data and privacy.",
     url: "https://gr8.com.np/privacy/",
   },
   alternates: {

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Explore GR8 Pvt. Ltd.'s portfolio of successful digital projects including websites, mobile apps, branding, and digital marketing campaigns delivered for clients across Nepal.",
   openGraph: {
-    title: "Portfolio | GR8 Pvt. Ltd.",
+    title: "Portfolio | G R Eight Private Limited",
     description:
       "See our work — successful digital projects delivered for businesses across Nepal.",
     url: "https://gr8.com.np/portfolio/",

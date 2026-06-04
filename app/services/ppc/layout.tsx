@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "PPC Advertising Services",
   description:
-    "Results-driven PPC advertising services in Nepal by GR8 Pvt. Ltd. Google Ads, Facebook Ads, and paid campaign management that maximizes your ROI and drives targeted traffic.",
+    "G R Eight offers PPC services in Nepal including Google Ads and Facebook Ads management to increase traffic and improve ROI.",
   openGraph: {
-    title: "PPC Advertising Services | GR8 Pvt. Ltd.",
+    title: "PPC Advertising Services | G R Eight Private Limited",
     description:
-      "Maximize your ROI with expert PPC advertising from GR8 Pvt. Ltd. — Google Ads, Facebook Ads, and more.",
+      "Maximize your ROI with expert PPC advertising from G R Eight Private Limited — Google Ads, Facebook Ads, and more.",
     url: "https://gr8.com.np/services/ppc/",
   },
   alternates: {

@@ -27,13 +27,11 @@ import { motion, AnimatePresence } from "framer-motion";
 // Custom hook for managing deleted IDs with localStorage
 const useDeletedIds = () => {
   const [deletedIds, setDeletedIds] = useState(() => {
-    // Initialize from localStorage only once
     if (typeof window === 'undefined') return new Set();
     const saved = localStorage.getItem('deletedContactIds');
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
 
-  // Persist to localStorage whenever deletedIds changes
   useEffect(() => {
     if (deletedIds.size > 0) {
       localStorage.setItem('deletedContactIds', JSON.stringify([...deletedIds]));
@@ -61,6 +59,108 @@ const useDeletedIds = () => {
   return { deletedIds, addDeletedId, removeDeletedId, clearAllDeleted };
 };
 
+// Custom hook for managing permanently removed IDs with localStorage
+const usePermanentlyRemovedIds = () => {
+  const [permanentIds, setPermanentIds] = useState(() => {
+    if (typeof window === 'undefined') return new Set();
+    const saved = localStorage.getItem('permanentlyRemovedContactIds');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  useEffect(() => {
+    if (permanentIds.size > 0) {
+      localStorage.setItem('permanentlyRemovedContactIds', JSON.stringify([...permanentIds]));
+    } else {
+      localStorage.removeItem('permanentlyRemovedContactIds');
+    }
+  }, [permanentIds]);
+
+  const addPermanentId = useCallback((id) => {
+    setPermanentIds(prev => new Set([...prev, id]));
+  }, []);
+
+  const addManyPermanentIds = useCallback((ids) => {
+    setPermanentIds(prev => new Set([...prev, ...ids]));
+  }, []);
+
+  return { permanentIds, addPermanentId, addManyPermanentIds };
+};
+
+// Confirmation Modal Component
+const ConfirmModal = ({ isOpen, onConfirm, onCancel, contact }) => {
+  if (!isOpen || !contact) return null;
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-60"
+            onClick={onCancel}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-70 flex items-center justify-center p-4"
+          >
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+              {/* Icon */}
+              <div className="flex items-center justify-center w-14 h-14 bg-red-100 rounded-full mx-auto mb-4">
+                <Trash2 className="text-red-500" size={28} />
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl font-bold text-gray-900 text-center mb-1">
+                Move to Trash?
+              </h3>
+              <p className="text-gray-500 text-sm text-center mb-5">
+                This message will be moved to Trash. You can restore it anytime.
+              </p>
+
+              {/* Message Preview */}
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <User size={14} className="text-gray-400" />
+                  <span className="font-semibold text-gray-800 text-sm">{contact.name}</span>
+                  <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded">{contact.subject}</span>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Mail size={14} className="text-gray-400" />
+                  <span className="text-gray-500 text-sm">{contact.email}</span>
+                </div>
+                <p className="text-gray-600 text-sm line-clamp-2 border-t border-gray-200 pt-2 mt-1">
+                  {contact.message}
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={onCancel}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={onConfirm}
+                  className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-medium text-sm flex items-center justify-center gap-2"
+                >
+                  <Trash2 size={16} />
+                  Move to Trash
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function AdminContactsPage() {
   const [contacts, setContacts] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
@@ -70,20 +170,20 @@ export default function AdminContactsPage() {
   const [expandedId, setExpandedId] = useState(null);
   const [showUndo, setShowUndo] = useState(null);
   const { deletedIds, addDeletedId, removeDeletedId, clearAllDeleted } = useDeletedIds();
+  const { permanentIds, addPermanentId, addManyPermanentIds } = usePermanentlyRemovedIds();
   const [lastDeleted, setLastDeleted] = useState(null);
   const [showHiddenSidebar, setShowHiddenSidebar] = useState(false);
   const [hiddenSearchTerm, setHiddenSearchTerm] = useState("");
   const [expandedHiddenId, setExpandedHiddenId] = useState(null);
+  const [trashConfirm, setTrashConfirm] = useState({ open: false, contact: null });
 
-  // Fetch contacts
   useEffect(() => {
     fetchContacts();
   }, []);
 
-  // Filter and sort contacts whenever dependencies change
   useEffect(() => {
     filterAndSortContacts();
-  }, [contacts, searchTerm, sortOrder, deletedIds]);
+  }, [contacts, searchTerm, sortOrder, deletedIds, permanentIds]);
 
   const fetchContacts = async () => {
     try {
@@ -92,7 +192,10 @@ export default function AdminContactsPage() {
       const response = await fetch("https://api.gr8.com.np/gr8/api/contact/get_contacts.php");
       const data = await response.json();
       if (data.success) {
-        setContacts(data.data);
+        // Filter out permanently removed contacts right after fetch
+        const saved = localStorage.getItem('permanentlyRemovedContactIds');
+        const permSet = saved ? new Set(JSON.parse(saved)) : new Set();
+        setContacts(data.data.filter(c => !permSet.has(c.id)));
       }
     } catch (error) {
       console.error("Error fetching contacts:", error);
@@ -104,10 +207,11 @@ export default function AdminContactsPage() {
   const filterAndSortContacts = () => {
     let filtered = [...contacts];
 
-    // Filter out deleted messages
-    filtered = filtered.filter(contact => !deletedIds.has(contact.id));
+    // Filter out deleted (trashed) and permanently removed messages
+    filtered = filtered.filter(contact => 
+      !deletedIds.has(contact.id) && !permanentIds.has(contact.id)
+    );
 
-    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(contact =>
         contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -117,7 +221,6 @@ export default function AdminContactsPage() {
       );
     }
 
-    // Sort
     filtered.sort((a, b) => {
       const dateA = new Date(a.created_at);
       const dateB = new Date(b.created_at);
@@ -127,22 +230,17 @@ export default function AdminContactsPage() {
     setFilteredContacts(filtered);
   };
 
-  // Get hidden contacts
   const getHiddenContacts = useCallback(() => {
     return contacts
-      .filter(contact => deletedIds.has(contact.id))
+      .filter(contact => deletedIds.has(contact.id) && !permanentIds.has(contact.id))
       .filter(contact =>
         hiddenSearchTerm === "" ||
         contact.name?.toLowerCase().includes(hiddenSearchTerm.toLowerCase()) ||
         contact.email?.toLowerCase().includes(hiddenSearchTerm.toLowerCase()) ||
         contact.subject?.toLowerCase().includes(hiddenSearchTerm.toLowerCase())
       )
-      .sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return dateB - dateA; // Show newest hidden first
-      });
-  }, [contacts, deletedIds, hiddenSearchTerm]);
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [contacts, deletedIds, permanentIds, hiddenSearchTerm]);
 
   const hiddenContacts = getHiddenContacts();
 
@@ -158,28 +256,27 @@ export default function AdminContactsPage() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-    
     if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
     return date.toLocaleDateString();
   };
 
+  // Show trash confirmation modal
   const handleDeleteContact = (id) => {
-     if (window.confirm("Are you sure you want to Delete this Message ?")) {
-      clearAllDeleted();
-      setShowHiddenSidebar(false);
-    }
-    
-    // Store the deleted contact temporarily for undo
-    const deletedContact = contacts.find(contact => contact.id === id);
-    setLastDeleted({ id, contact: deletedContact });
-    
-    // Add to deleted IDs
-    addDeletedId(id);
-    setShowUndo(id);
-    
-    // Hide undo notification after 5 seconds
+    const contact = contacts.find(c => c.id === id);
+    setTrashConfirm({ open: true, contact });
+  };
+
+  // Confirmed — actually move to trash
+  const confirmTrash = () => {
+    const { contact } = trashConfirm;
+    setTrashConfirm({ open: false, contact: null });
+    setLastDeleted({ id: contact.id, contact });
+    addDeletedId(contact.id);
+    setExpandedId(null);
+    setShowUndo(contact.id);
+
     const timer = setTimeout(() => {
       setShowUndo(null);
       setLastDeleted(null);
@@ -188,19 +285,33 @@ export default function AdminContactsPage() {
     return () => clearTimeout(timer);
   };
 
+  // Cancelled
+  const cancelTrash = () => {
+    setTrashConfirm({ open: false, contact: null });
+  };
+
+  // Undo trash
   const handleUndoDelete = (id) => {
     removeDeletedId(id);
     setShowUndo(null);
     setLastDeleted(null);
   };
 
+  // Permanently remove all trashed messages from UI + localStorage (not from DB)
   const handleClearAllDeleted = () => {
-    if (window.confirm("Are you sure you want to permanently clear all Deleted Messages ? This action cannot be undone.")) {
+    if (window.confirm("Are you sure you want to permanently clear all Deleted Messages? This action cannot be undone.")) {
+      const idsToClear = [...deletedIds];
+      // Add to permanent blacklist so they stay hidden after refresh
+      addManyPermanentIds(idsToClear);
+      // Remove from contacts state
+      setContacts(prev => prev.filter(contact => !deletedIds.has(contact.id)));
+      // Clear the trash set
       clearAllDeleted();
       setShowHiddenSidebar(false);
     }
   };
 
+  // Restore all trashed messages back to visible
   const handleRestoreAllDeleted = () => {
     if (window.confirm("Restore all Deleted Messages?")) {
       clearAllDeleted();
@@ -208,25 +319,42 @@ export default function AdminContactsPage() {
     }
   };
 
+  // Restore a single trashed message
   const restoreContact = (id) => {
     removeDeletedId(id);
   };
 
-  // Calculate statistics
+  // Permanently remove a single message from trash
+  const handlePermanentDeleteSingle = (id) => {
+    if (window.confirm("Permanently remove this message? This cannot be undone.")) {
+      addPermanentId(id);
+      setContacts(prev => prev.filter(contact => contact.id !== id));
+      removeDeletedId(id);
+    }
+  };
+
   const totalMessages = contacts.length;
-  const visibleMessages = totalMessages - deletedIds.size;
-  const messagesWithPhone = contacts.filter(c => c.phone && !deletedIds.has(c.id)).length;
-  
+  const visibleMessages = contacts.filter(c => !deletedIds.has(c.id) && !permanentIds.has(c.id)).length;
+  const messagesWithPhone = contacts.filter(c => c.phone && !deletedIds.has(c.id) && !permanentIds.has(c.id)).length;
+
   const thisMonthMessages = contacts.filter(c => {
-    if (deletedIds.has(c.id)) return false;
+    if (deletedIds.has(c.id) || permanentIds.has(c.id)) return false;
     const contactDate = new Date(c.created_at);
     const now = new Date();
-    return contactDate.getMonth() === now.getMonth() && 
-           contactDate.getFullYear() === now.getFullYear();
+    return contactDate.getMonth() === now.getMonth() &&
+      contactDate.getFullYear() === now.getFullYear();
   }).length;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 relative">
+      {/* Trash Confirmation Modal */}
+      <ConfirmModal
+        isOpen={trashConfirm.open}
+        contact={trashConfirm.contact}
+        onConfirm={confirmTrash}
+        onCancel={cancelTrash}
+      />
+
       {/* Undo Notification */}
       <AnimatePresence>
         {showUndo !== null && (
@@ -238,7 +366,7 @@ export default function AdminContactsPage() {
           >
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 flex items-center gap-4">
               <CheckCircle className="text-green-500" size={20} />
-              <span className="text-gray-700">Message hidden</span>
+              <span className="text-gray-700">Message moved to Trash</span>
               <button
                 onClick={() => handleUndoDelete(showUndo)}
                 className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
@@ -260,7 +388,6 @@ export default function AdminContactsPage() {
       <AnimatePresence>
         {showHiddenSidebar && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -268,8 +395,7 @@ export default function AdminContactsPage() {
               onClick={() => setShowHiddenSidebar(false)}
               className="fixed inset-0 bg-black/50 z-40"
             />
-            
-            {/* Sidebar */}
+
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -285,7 +411,7 @@ export default function AdminContactsPage() {
                       <Archive className="text-amber-600" size={24} />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900">Deleted Messages</h2>
+                      <h2 className="text-xl font-bold text-gray-900">Trash</h2>
                       <p className="text-gray-600 text-sm">
                         {hiddenContacts.length} message{hiddenContacts.length !== 1 ? 's' : ''}
                       </p>
@@ -299,32 +425,30 @@ export default function AdminContactsPage() {
                   </button>
                 </div>
 
-                {/* Search in Deleted Messages */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
                     type="text"
-                    placeholder="Search Deleted Messages..."
+                    placeholder="Search Trash..."
                     value={hiddenSearchTerm}
                     onChange={(e) => setHiddenSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent text-sm"
                   />
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={handleRestoreAllDeleted}
                     className="flex-1 px-3 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
                   >
                     <Eye size={16} />
-                    Show All
+                    Restore All
                   </button>
                   <button
                     onClick={handleClearAllDeleted}
                     className="flex-1 px-3 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
                   >
-                    <X size={16} />
+                    <Trash size={16} />
                     Clear All
                   </button>
                 </div>
@@ -335,9 +459,9 @@ export default function AdminContactsPage() {
                 {hiddenContacts.length === 0 ? (
                   <div className="text-center py-12">
                     <Archive className="mx-auto text-gray-300" size={48} />
-                    <h3 className="mt-4 text-lg font-medium text-gray-900">No Deleted Messages</h3>
+                    <h3 className="mt-4 text-lg font-medium text-gray-900">Trash is Empty</h3>
                     <p className="mt-2 text-gray-600 text-sm">
-                      {hiddenSearchTerm ? 'No Deleted Messages match your search' : 'All messages are visible'}
+                      {hiddenSearchTerm ? 'No messages match your search' : 'No messages in trash'}
                     </p>
                   </div>
                 ) : (
@@ -370,8 +494,7 @@ export default function AdminContactsPage() {
                                 {getTimeAgo(contact.created_at)}
                               </span>
                             </div>
-                            
-                            {/* Message preview */}
+
                             {expandedHiddenId === contact.id && (
                               <motion.div
                                 initial={{ opacity: 0, height: 0 }}
@@ -384,6 +507,7 @@ export default function AdminContactsPage() {
                               </motion.div>
                             )}
                           </div>
+
                           <div className="flex flex-col gap-2 ml-2">
                             <button
                               onClick={() => toggleHiddenExpand(contact.id)}
@@ -399,6 +523,13 @@ export default function AdminContactsPage() {
                             >
                               <RotateCcw size={16} />
                             </button>
+                            <button
+                              onClick={() => handlePermanentDeleteSingle(contact.id)}
+                              className="p-1 text-red-500 hover:text-red-700"
+                              title="Permanently delete"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </div>
                       </motion.div>
@@ -410,7 +541,7 @@ export default function AdminContactsPage() {
               {/* Sidebar Footer */}
               <div className="p-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between text-sm text-gray-600">
-                  <span>Deleted Messages are stored locally</span>
+                  <span>Deletions are local only</span>
                   <button
                     onClick={() => setShowHiddenSidebar(false)}
                     className="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm"
@@ -434,15 +565,13 @@ export default function AdminContactsPage() {
             </div>
             <div className="flex items-center gap-3">
               {deletedIds.size > 0 && (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setShowHiddenSidebar(true)}
-                    className="px-4 py-2 text-red-600  text-sm font-medium rounded-lg cursor-pointer hover:text-red-800 transition-colors flex items-center gap-2"
-                  >
-                    <Trash size={16} />
-                    Trash  ({deletedIds.size})
-                  </button>
-                </div>
+                <button
+                  onClick={() => setShowHiddenSidebar(true)}
+                  className="px-4 py-2 text-red-600 text-sm font-medium rounded-lg cursor-pointer hover:text-red-800 transition-colors flex items-center gap-2"
+                >
+                  <Trash size={16} />
+                  Trash ({deletedIds.size})
+                </button>
               )}
               <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
                 {visibleMessages} {visibleMessages === 1 ? 'Message' : 'Messages'} visible
@@ -478,7 +607,7 @@ export default function AdminContactsPage() {
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <button 
+              <button
                 onClick={fetchContacts}
                 className="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
               >
@@ -487,7 +616,6 @@ export default function AdminContactsPage() {
               </button>
             </div>
           </div>
-        
         </div>
 
         {/* Messages List */}
@@ -500,7 +628,7 @@ export default function AdminContactsPage() {
           <div className="text-center py-12 bg-white rounded-xl shadow-sm">
             <MessageSquare className="mx-auto text-gray-300" size={64} />
             <h3 className="mt-4 text-lg font-medium text-gray-900">
-              {deletedIds.size > 0 && totalMessages > 0 ? 'No message found' : 'cant see any messages here'}
+              {searchTerm ? 'No messages match your search' : 'No messages to display'}
             </h3>
           </div>
         ) : (
@@ -515,7 +643,7 @@ export default function AdminContactsPage() {
                   className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
                 >
                   {/* Message Header */}
-                  <div 
+                  <div
                     className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => toggleExpand(item.id)}
                   >
@@ -563,20 +691,20 @@ export default function AdminContactsPage() {
                           {item.message}
                         </p>
                       </div>
-                      
+
                       <div className="flex items-center justify-between pt-4 border-t border-gray-200">
                         <div className="text-sm text-gray-500">
                           Received: {new Date(item.created_at).toLocaleString()}
                         </div>
                         <div className="flex gap-2">
-                          <button 
+                          <button
                             onClick={() => window.location.href = `mailto:${item.email}?subject=Re: ${item.subject}`}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center gap-2"
                           >
                             <Mail size={16} />
                             Reply
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleDeleteContact(item.id)}
                             className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm font-medium flex items-center gap-2"
                           >
@@ -595,7 +723,7 @@ export default function AdminContactsPage() {
 
         {/* Stats Summary */}
         {!loading && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4"
@@ -609,7 +737,7 @@ export default function AdminContactsPage() {
                   <p className="text-sm text-gray-600">Total Messages</p>
                   <p className="text-2xl font-bold text-gray-900">{totalMessages}</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {visibleMessages} visible • {deletedIds.size} deleted
+                    {visibleMessages} visible • {deletedIds.size} in trash
                   </p>
                 </div>
               </div>
@@ -621,9 +749,7 @@ export default function AdminContactsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">With Phone Number</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {messagesWithPhone}
-                  </p>
+                  <p className="text-2xl font-bold text-gray-900">{messagesWithPhone}</p>
                 </div>
               </div>
             </div>
@@ -634,9 +760,7 @@ export default function AdminContactsPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">This Month</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {thisMonthMessages}
-                  </p>
+                  <p className="text-2xl font-bold text-gray-900">{thisMonthMessages}</p>
                 </div>
               </div>
             </div>
@@ -646,10 +770,8 @@ export default function AdminContactsPage() {
                   <EyeOff className="text-amber-600" size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Deleted Messages</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {deletedIds.size}
-                  </p>
+                  <p className="text-sm text-gray-600">In Trash</p>
+                  <p className="text-2xl font-bold text-gray-900">{deletedIds.size}</p>
                   {deletedIds.size > 0 && (
                     <button
                       onClick={() => setShowHiddenSidebar(true)}

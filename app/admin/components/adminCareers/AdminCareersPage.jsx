@@ -304,22 +304,22 @@ export default function AdminCareersPage() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-white rounded-lg border p-4 flex items-center justify-between">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between">
                 <div><p className="text-sm text-gray-600">Total</p><p className="text-2xl font-semibold">{careers.length}</p></div>
                 <Briefcase className="w-8 h-8 text-emerald-500" />
               </div>
-              <div className="bg-white rounded-lg border p-4 flex items-center justify-between">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between">
                 <div><p className="text-sm text-gray-600">Active</p><p className="text-2xl font-semibold">{careers.filter(c => c.is_active == 1).length}</p></div>
                 <CheckCircle className="w-8 h-8 text-green-500" />
               </div>
-              <div className="bg-white rounded-lg border p-4 flex items-center justify-between">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 flex items-center justify-between">
                 <div><p className="text-sm text-gray-600">Applications</p><p className="text-2xl font-semibold">{applications.length}</p></div>
                 <FileText className="w-8 h-8 text-orange-500" />
               </div>
             </div>
 
             {/* Positions Table */}
-            <div className="bg-white rounded-xl border overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -332,7 +332,7 @@ export default function AdminCareersPage() {
                 </thead>
                 <tbody className="divide-y">
                   {filteredCareers.map((career) => (
-                    <tr key={career.id} className="hover:bg-gray-50">
+                    <tr key={career.id} className="hover:bg-gray-50 border-b-gray-300">
                       <td className="px-4 py-3">
                         <div className="font-medium text-gray-900 text-sm">{career.title}</div>
                         <div className="text-xs text-gray-500">{career.salary || 'N/A'}</div>
@@ -345,8 +345,8 @@ export default function AdminCareersPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <button onClick={() => handleEdit(career)} className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={() => handleDeleteCareer(career.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={() => handleEdit(career)} className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded"><Edit2 className="w-4 h-4c text-blue-500" /></button>
+                        <button onClick={() => handleDeleteCareer(career.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4 text-red-600" /></button>
                       </td>
                     </tr>
                   ))}
@@ -384,7 +384,7 @@ export default function AdminCareersPage() {
             </div>
 
             {/* Applications Table */}
-            <div className="bg-white rounded-xl border overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-300 overflow-hidden">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -398,7 +398,7 @@ export default function AdminCareersPage() {
                 </thead>
                 <tbody className="divide-y">
                   {filteredApplications.map((app) => (
-                    <tr key={app.id} className={`hover:bg-gray-50 ${app.is_read == 0 ? 'bg-orange-50' : ''}`}>
+                    <tr key={app.id} className={`hover:bg-gray-50 ${app.is_read == 0 ? 'bg-orange-50' : ''} border-b-gray-300`}>
                       <td className="px-4 py-3">
                         <div className="font-medium text-gray-900 text-sm">{app.name}</div>
                         {app.portfolio && <a href={app.portfolio} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline">Portfolio</a>}
@@ -419,7 +419,8 @@ export default function AdminCareersPage() {
                           <Eye className="w-4 h-4" />
                         </button>
                         {app.resume_path && (
-                          <a href={`http://localhost/gr8/${app.resume_path}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded inline-block" title="Download Resume">
+                          // <a href={`http://localhost/gr8/${app.resume_path}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded inline-block" title="Download Resume">
+                          <a href={`http://api.gr8.com.np/gr8/${app.resume_path}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded inline-block" title="Download Resume">
                             <Download className="w-4 h-4" />
                           </a>
                         )}
@@ -460,7 +461,8 @@ export default function AdminCareersPage() {
                   <div className="bg-gray-50 rounded-lg p-4 text-sm whitespace-pre-wrap">{selectedApplication.cover_letter || 'No cover letter provided'}</div>
                 </div>
                 {selectedApplication.resume_path && (
-                  <a href={`http://localhost/gr8/${selectedApplication.resume_path}`} target="_blank" rel="noopener noreferrer" 
+                  // <a href={`http://localhost/gr8/${selectedApplication.resume_path}`} target="_blank" rel="noopener noreferrer" 
+                  <a href={`http://api.gr8.com.np/gr8/${selectedApplication.resume_path}`} target="_blank" rel="noopener noreferrer" 
                     className="inline-flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
                     <Download className="w-4 h-4" /> Download Resume
                   </a>

@@ -76,9 +76,7 @@ const Admin_Main_Page = () => {
   const fetchNotifications = useCallback(async () => {
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/get_applications.php');
-      const res = await fetch(
-        "https://api.gr8.com.np/gr8/api/applications/get_applications.php",
-      );
+      const res = await fetch("https://api.gr8.com.np/gr8/api/applications/get_applications.php",);
       const data = await res.json();
       if (data.success) {
         setNotifications(data.unread_count || 0);
@@ -102,9 +100,7 @@ const Admin_Main_Page = () => {
   const handleMarkAllRead = async () => {
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/mark_read.php', {
-      const res = await fetch(
-        "https://api.gr8.com.np/gr8/api/applications/mark_read.php",
-        {
+      const res = await fetch("https://api.gr8.com.np/gr8/api/applications/mark_read.php",{
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mark_all: true }),
@@ -124,9 +120,7 @@ const Admin_Main_Page = () => {
     if (!confirm("Delete this notification?")) return;
     try {
       // const res = await fetch('http://localhost/gr8/api/applications/delete_application.php', {
-      const res = await fetch(
-        "https://api.gr8.com.np/gr8/api/applications/delete_application.php",
-        {
+      const res = await fetch("https://api.gr8.com.np/gr8/api/applications/delete_application.php",{
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id }),
@@ -212,9 +206,7 @@ const Admin_Main_Page = () => {
     confirm("are you sure you want to logout?");
     try {
       // const res = await fetch("http://localhost/gr8/api/auth/logout.php", {
-      const res = await fetch(
-        "https://api.gr8.com.np/gr8/api/auth/logout.php",
-        {
+      const res = await fetch("https://api.gr8.com.np/gr8/api/auth/logout.php",{
           method: "POST",
           credentials: "include", // important for sending session cookie
         },

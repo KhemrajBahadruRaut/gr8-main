@@ -659,7 +659,7 @@ function MemberFormModal({ member, onSave, onClose, loading }) {
   );
 }
 
-// ─── Member Row ───────────────────────────────────────────────────────────────
+// Member Row 
 function MemberRow({ member, onEdit, onDelete, onToggleActive, onMove }) {
   const level = LEVELS.find((l) => l.value === member.level) || LEVELS[2];
   const LevelIcon = level.icon;
@@ -752,14 +752,14 @@ function MemberRow({ member, onEdit, onDelete, onToggleActive, onMove }) {
   );
 }
 
-// ─── Main Admin Page ──────────────────────────────────────────────────────────
+// Main Admin Page
 export default function TeamAdmin() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [filterLevel, setFilterLevel] = useState("all");
-  const [editMember, setEditMember] = useState(null); // null = closed, {} = new, {...} = edit
+  const [editMember, setEditMember] = useState(null); 
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [toast, setToast] = useState(null);
 

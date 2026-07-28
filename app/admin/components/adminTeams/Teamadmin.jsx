@@ -28,8 +28,8 @@ import {
 
 // ─── API helpers ────────────────────────────────────────────────────────────
 const API = {
-  base: "http://localhost/gr8/api/team",
-  // base: "https://api.gr8.com.np/gr8/api/team",
+  // base: "http://localhost/gr8/api/team",
+  base: "https://api.gr8.com.np/gr8/api/team",
   get: (params = "") =>
     fetch(`${API.base}/getTeam.php${params}`).then((r) => r.json()),
   create: (body) =>

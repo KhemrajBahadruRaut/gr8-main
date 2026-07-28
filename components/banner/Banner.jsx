@@ -1,24 +1,80 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api";
+
 export default function TrustedBySection() {
-  const clients = [
-    { name: "Deliver Mart", logo: "/banner/DeliveyMartLogo.webp" },
-    { name: "Himalayan Thakali", logo: "/banner/HImalayanThakaliogo.webp" },
-    { name: "Joy Travel and Tours", logo: "/banner/JoyTravelandToursLogo.webp" },
-    // { name: "Karmasila Enterprises", logo: "/banner/KarmasilaEnterprisesLogo.webp" },
-    { name: "Key Nova Group", logo: "/banner/KeyNovaGroupLogo.webp" },
-    // { name: "NPP Burger", logo: "/banner/nppburgerLogo.webp" },
-    { name: "Parijat Clinic", logo: "/banner/ParijatClinicLogo.webp" },
-    { name: "PATAN Pathlab", logo: "/banner/PATAN-pathlab-Logo.webp" },
-    { name: "Precision Diagnostic", logo: "/banner/PrecisionDiagnosticLogo.webp" },
-    { name: "PTANA Health Lab", logo: "/banner/PTANA-HEALTH-LAB-LOGO.webp" },
-    { name: "Reliable Care Pt", logo: "/banner/ReliableCarePtLogo.webp" },
-    { name: "SEWA Home Care", logo: "/banner/SEWAHomeCareLOGO.webp" },
-    { name: "Shree Ganapati Bappa Saw Mill", logo: "/banner/ShreeGanapatiBappaSawMillLogo.webp" },
-    // { name: "Siddhi Skin Aesthetic", logo: "/banner/SiddhiSkinAestheticLogo.webp" },
-    { name: "Suvekshya International Hospital", logo: "/banner/SuvekshyaInternationalHospitalLogo.webp" },
-    { name: "Ticket Kaksha Travel and Tour", logo: "/banner/TicketKakshaTravelandTourLogo.webp" },
-    { name: "Sewa The Foundation", logo: "/banner/SewaTheFoundationLogo.webp" },
-    { name: "United Supreme", logo: "/banner/UnitedSupremeLogo.webp" },
-  ];
+  const [clients, setClients] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let refreshInProgress = false;
+
+    const refreshClients = async () => {
+      if (refreshInProgress || controller.signal.aborted) return;
+      refreshInProgress = true;
+
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/clients/get_clients.php?active=1&_=${Date.now()}`,
+          {
+            cache: "no-store",
+            signal: controller.signal,
+          },
+        );
+        if (!response.ok) throw new Error("Unable to load clients");
+        const data = await response.json();
+        if (!data.success || !Array.isArray(data.clients)) return;
+        setClients(
+          data.clients.map((client) => ({
+            id: client.id,
+            name: client.name,
+            logo: client.logo_url,
+          })),
+        );
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to refresh the clients banner:", error);
+        }
+      } finally {
+        refreshInProgress = false;
+      }
+    };
+
+    const handleStorageUpdate = (event) => {
+      if (event.key === "gr8_clients_updated") refreshClients();
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") refreshClients();
+    };
+    const channel =
+      typeof BroadcastChannel !== "undefined"
+        ? new BroadcastChannel("gr8_clients")
+        : null;
+
+    refreshClients();
+    const interval = window.setInterval(refreshClients, 3000);
+    channel?.addEventListener("message", refreshClients);
+    window.addEventListener("gr8:clients-updated", refreshClients);
+    window.addEventListener("storage", handleStorageUpdate);
+    window.addEventListener("focus", refreshClients);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      controller.abort();
+      window.clearInterval(interval);
+      channel?.removeEventListener("message", refreshClients);
+      channel?.close();
+      window.removeEventListener("gr8:clients-updated", refreshClients);
+      window.removeEventListener("storage", handleStorageUpdate);
+      window.removeEventListener("focus", refreshClients);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  if (clients.length === 0) return null;
 
   const duplicatedClients = [...clients, ...clients, ...clients];
 
@@ -40,7 +96,7 @@ export default function TrustedBySection() {
             <div className="flex animate-scroll">
               {duplicatedClients.map((client, index) => (
                 <div
-                  key={index}
+                  key={`${client.id}-${index}`}
                   className="shrink-0 sm:mx-8 mx-4 flex items-center justify-center sm:w-35 w-25 h-24"
                 >
                   <img
@@ -84,4 +140,3 @@ export default function TrustedBySection() {
     </div>
   );
 }
-

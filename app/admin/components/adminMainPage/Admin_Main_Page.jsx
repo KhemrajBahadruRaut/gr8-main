@@ -19,6 +19,7 @@ import {
   Shield,
   Mail,
   Briefcase,
+  Handshake,
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,6 +35,7 @@ const AdminSubscribersPage = lazy(
   () => import("../adminNewsletter/NewsletterAdmin"),
 );
 const AdminCareersPage = lazy(() => import("../adminCareers/AdminCareersPage"));
+const ClientsAdmin = lazy(() => import("../adminClients/ClientsAdmin"));
 
 // Loading component for lazy loading
 const LoadingFallback = () => (
@@ -57,6 +59,7 @@ const NAV_ITEMS = [
   { id: "subscribers", label: "Subscribers", icon: Mail, color: "purple" },
   { id: "careers", label: "Careers", icon: Briefcase, color: "orange" },
   { id: "teams", label: "Teams", icon: Briefcase, color: "red" },
+  { id: "clients", label: "Clients", icon: Handshake, color: "emerald" },
 ];
 
 const Admin_Main_Page = () => {
@@ -159,6 +162,8 @@ const Admin_Main_Page = () => {
         return AdminCareersPage;
       case "teams":
         return TeamAdmin;
+      case "clients":
+        return ClientsAdmin;
       default:
         return AdminContactsPage;
     }

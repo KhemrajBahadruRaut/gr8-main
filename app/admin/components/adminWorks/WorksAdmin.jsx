@@ -24,19 +24,6 @@ const WORKS_API_BASE = `${
   process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api"
 }/works`;
 
-const LOGO_KINDS = [
-  "suvekchya",
-  "reliable",
-  "united",
-  "joy",
-  "precision",
-  "parijat",
-  "delivery",
-  "rtcs",
-];
-
-const PROJECT_VISUALS = ["photography", "food", "travel", "delivery"];
-
 async function apiRequest(endpoint, options = {}) {
   const response = await fetch(`${WORKS_API_BASE}/${endpoint}`, {
     cache: "no-store",
@@ -86,27 +73,6 @@ function Field({ label, value, onChange, textarea = false, type = "text", placeh
           className={shared}
         />
       )}
-    </label>
-  );
-}
-
-function SelectField({ label, value, options, onChange }) {
-  return (
-    <label className="block min-w-0">
-      <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-600">
-        {label}
-      </span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none focus:border-emerald-500 focus:ring-3 focus:ring-emerald-100"
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option.replaceAll("-", " ")}
-          </option>
-        ))}
-      </select>
     </label>
   );
 }
@@ -239,14 +205,8 @@ function ClientEditor({
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Client name" value={client.name} onChange={(value) => setField("name", value)} />
-        <SelectField
-          label="Fallback logo style"
-          value={client.logo_kind}
-          options={LOGO_KINDS}
-          onChange={(value) => setField("logo_kind", value)}
-        />
         <UploadField
-          label="Custom logo"
+          label="Client logo"
           value={client.logo_url}
           onChange={(value) => setField("logo_url", value)}
           onUpload={onUpload}
@@ -507,7 +467,7 @@ export default function WorksAdmin() {
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <SectionHeader
               title="Digital marketing clients"
-              description="Custom logos override the built-in fallback logo style."
+              description="Upload the logo that will appear on each client card."
               action={
                 <button type="button" onClick={() => addRow("digital_marketing", "clients", { name: "New client", logo_kind: "reliable", logo_url: "", project_url: "" })} className="flex items-center gap-2 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white">
                   <Plus className="h-4 w-4" /> Add client
@@ -560,7 +520,6 @@ export default function WorksAdmin() {
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
                     <Field label="Project name" value={project.name} onChange={(value) => updateRow("web_development", "projects", index, "name", value)} />
-                    <SelectField label="Fallback artwork" value={project.visual_kind} options={PROJECT_VISUALS} onChange={(value) => updateRow("web_development", "projects", index, "visual_kind", value)} />
                     <div className="md:col-span-2">
                       <Field textarea label="Description" value={project.description} onChange={(value) => updateRow("web_development", "projects", index, "description", value)} />
                     </div>

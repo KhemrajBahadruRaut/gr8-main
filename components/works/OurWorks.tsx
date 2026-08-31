@@ -1,11 +1,15 @@
 "use client"
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   DEFAULT_WORKS_CONTENT,
   normalizeWorksContent,
-  type ClientLogoKind,
   type WebProject,
-  type WorkPanel,
   type WorksContent,
 } from "@/lib/works-content";
 import TrustedBySection from "../banner/Banner";
@@ -41,6 +45,71 @@ function routeFromUrl(): Route {
 /* ---------------------------------------------------------------- */
 /* Shared bits                                                       */
 /* ---------------------------------------------------------------- */
+
+function LoadingImage({
+  src,
+  alt,
+  className = "",
+  style,
+  fit = "cover",
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  style?: CSSProperties;
+  fit?: CSSProperties["objectFit"];
+  priority?: boolean;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    setLoaded(false);
+    setFailed(false);
+  }, [src]);
+
+  return (
+    <div
+      className={`works-image ${className}`.trim()}
+      style={style}
+      aria-busy={!loaded && !failed}
+    >
+      {!loaded && !failed && (
+        <div className="works-image-loader" role="status" aria-label="Loading image">
+          <span className="works-image-spinner" />
+        </div>
+      )}
+      {failed && <div className="works-image-error">Image unavailable</div>}
+      {src && (
+        <img
+          src={src}
+          alt={alt}
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
+          decoding="async"
+          onLoad={(event) => {
+            const image = event.currentTarget;
+            if (typeof image.decode === "function") {
+              void image.decode().catch(() => undefined).finally(() => setLoaded(true));
+            } else {
+              setLoaded(true);
+            }
+          }}
+          onError={() => setFailed(true)}
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "block",
+            objectFit: fit,
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 220ms ease",
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 function PageHeader({
   eyebrow,
@@ -96,7 +165,7 @@ function PageHeader({
   );
 }
 
-function ClientLogo({ id }: { id: ClientLogoKind }) {
+function ClientLogo({ id }: { id: string }) {
   const common = { width: "100%", height: 46, overflow: "visible" as const };
   switch (id) {
     case "suvekchya":
@@ -249,16 +318,16 @@ function ClientLogo({ id }: { id: ClientLogoKind }) {
 }
 
 function ClientCard({
-  id,
   name,
   logoUrl,
   projectUrl,
+  priority = false,
   highlighted = false,
 }: {
-  id: ClientLogoKind;
   name: string;
   logoUrl?: string;
   projectUrl?: string;
+  priority?: boolean;
   highlighted?: boolean;
 }) {
   return (
@@ -283,15 +352,13 @@ function ClientCard({
           padding: highlighted ? "4px 6px" : 0,
         }}
       >
-        {logoUrl ? (
-          <img
-            src={logoUrl}
-            alt={`${name} logo`}
-            style={{ width: "100%", height: 46, objectFit: "contain" }}
-          />
-        ) : (
-          <ClientLogo id={id} />
-        )}
+        <LoadingImage
+          src={logoUrl || ""}
+          alt={`${name} logo`}
+          fit="contain"
+          priority={priority}
+          style={{ width: "100%", height: 46 }}
+        />
       </div>
       <div style={{ marginTop: "auto" }}>
         <div style={{ fontSize: 14.5, fontWeight: 600, marginBottom: 10, lineHeight: 1.35 }}>
@@ -411,27 +478,22 @@ function AssistantArt() {
 }
 
 function Art({
-  pattern,
   imageUrl,
   title,
+  priority,
 }: {
-  pattern: WorkPanel["pattern"];
   imageUrl: string;
   title: string;
+  priority: boolean;
 }) {
-  if (imageUrl) {
-    return (
-      <img
-        src={imageUrl}
-        alt={`${title} portfolio`}
-        className="art"
-        style={{ objectFit: "cover" }}
-      />
-    );
-  }
-  if (pattern === "marketing") return <MarketingArt />;
-  if (pattern === "code") return <CodeArt />;
-  return <AssistantArt />;
+  return (
+    <LoadingImage
+      src={imageUrl}
+      alt={`${title} portfolio`}
+      className="art"
+      priority={priority}
+    />
+  );
 }
 
 function Home({
@@ -508,9 +570,9 @@ function Home({
               }}
             >
               <Art
-                pattern={panel.pattern}
                 imageUrl={panel.image_url}
                 title={panel.title}
+                priority={isActive}
               />
               <div className="overlay" />
               <div className="content">
@@ -574,10 +636,10 @@ function DigitalMarketingPage({
         {content.clients.map((client, index) => (
           <ClientCard
             key={`${client.name}-${index}`}
-            id={client.logo_kind}
             name={client.name}
             logoUrl={client.logo_url}
             projectUrl={client.project_url}
+            priority={index < 4}
           />
         ))}
       </div>
@@ -719,17 +781,21 @@ function WebsiteMock({ kind }: { kind: WebProject["visual_kind"] }) {
   );
 }
 
-function ProjectVisual({ project }: { project: WebProject }) {
-  if (project.image_url) {
-    return (
-      <img
-        src={project.image_url}
-        alt={`${project.name} project preview`}
-        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-      />
-    );
-  }
-  return <WebsiteMock kind={project.visual_kind} />;
+function ProjectVisual({
+  project,
+  priority = false,
+}: {
+  project: WebProject;
+  priority?: boolean;
+}) {
+  return (
+    <LoadingImage
+      src={project.image_url}
+      alt={`${project.name} project preview`}
+      priority={priority}
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 }
 
 function WebDevelopmentPage({
@@ -778,7 +844,7 @@ function WebDevelopmentPage({
 
         <div className="featured-card">
           <div className="featured-image">
-            <ProjectVisual project={project} />
+            <ProjectVisual project={project} priority />
           </div>
           <div className="featured-info">
             <h3 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 10px" }}>{project.name}</h3>
@@ -897,10 +963,10 @@ function VirtualAssistancePage({
         {content.clients.map((client, index) => (
           <ClientCard
             key={`${client.name}-${index}`}
-            id={client.logo_kind}
             name={client.name}
             logoUrl={client.logo_url}
             projectUrl={client.project_url}
+            priority={index < 4}
             highlighted={client.highlighted}
           />
         ))}
@@ -1042,6 +1108,25 @@ export default function PortfolioSite() {
     };
   }, []);
 
+  useEffect(() => {
+    const imageUrls = [
+      ...content.home.panels.map((panel) => panel.image_url),
+      ...content.digital_marketing.clients.map((client) => client.logo_url),
+      ...content.web_development.projects.map((project) => project.image_url),
+      ...content.virtual_assistance.clients.map((client) => client.logo_url),
+    ].filter(Boolean);
+
+    const timer = window.setTimeout(() => {
+      imageUrls.forEach((src) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = src;
+      });
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [content]);
+
   return (
     <section
       style={{
@@ -1055,6 +1140,37 @@ export default function PortfolioSite() {
       }}
     >
       <style>{`
+        .works-image {
+          position: relative;
+          overflow: hidden;
+          background: #151821;
+        }
+        .works-image-loader,
+        .works-image-error {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255,255,255,0.48);
+          background: linear-gradient(110deg, #171a23 25%, #20242f 45%, #171a23 65%);
+          background-size: 220% 100%;
+          animation: works-image-shimmer 1.15s linear infinite;
+          font-size: 11px;
+        }
+        .works-image-spinner {
+          width: 22px;
+          height: 22px;
+          border: 2px solid rgba(255,255,255,0.16);
+          border-top-color: ${ACCENT};
+          border-radius: 50%;
+          animation: works-image-spin 700ms linear infinite;
+        }
+        .works-image-error { animation: none; }
+        @keyframes works-image-spin { to { transform: rotate(360deg); } }
+        @keyframes works-image-shimmer { to { background-position: -220% 0; } }
+
         .row {
           display: flex;
           gap: 16px;

@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Image from "next/image";
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +25,7 @@ export default function Login() {
     }
 
     try {
-      // const res = await fetch("http://localhost/gr8/api/auth/login.php", {
-      const res = await fetch("https://api.gr8.com.np/gr8/api/auth/login.php", {
+      const res = await fetch(`${API_BASE_URL}/auth/login.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

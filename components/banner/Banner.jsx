@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api";
+  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.npcode/gr8/api";
 
 export default function TrustedBySection() {
   const [clients, setClients] = useState([]);

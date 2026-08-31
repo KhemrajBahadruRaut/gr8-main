@@ -21,10 +21,30 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
     });
   }, [pathname]);
 
+  useEffect(() => {
+    if (!isAdminRoute) return;
+
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehavior;
+
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overscrollBehavior = previousBodyOverscroll;
+    };
+  }, [isAdminRoute]);
+
   return (
     <>
       {!isAdminRoute && <Header />}
-      <main>{children}</main>
+      <main className={isAdminRoute ? "h-dvh overflow-hidden" : undefined}>
+        {children}
+      </main>
       {!isAdminRoute && <Footer />}
     </>
   );

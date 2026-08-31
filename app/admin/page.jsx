@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Admin_Main_Page from "./components/adminMainPage/Admin_Main_Page";
 
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api";
+
 export default function AdminPage() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
@@ -12,8 +15,7 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // const res = await fetch("http://localhost/gr8/api/auth/check.php", {
-        const res = await fetch("https://api.gr8.com.np/gr8/api/auth/check.php", {
+        const res = await fetch(`${API_BASE_URL}/auth/check.php`, {
           credentials: "include",
         });
 

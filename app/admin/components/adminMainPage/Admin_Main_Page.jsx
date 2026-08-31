@@ -20,11 +20,15 @@ import {
   Mail,
   Briefcase,
   Handshake,
+  PanelsTopLeft,
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import TeamAdmin from "../adminTeams/Teamadmin";
+
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_GR8_API_URL || "https://api.gr8.com.np/gr8/api";
 
 // Lazy load components for better performance
 const AdminBlogForm = lazy(() => import("../adminBlog/AdminBlogForm"));
@@ -36,6 +40,7 @@ const AdminSubscribersPage = lazy(
 );
 const AdminCareersPage = lazy(() => import("../adminCareers/AdminCareersPage"));
 const ClientsAdmin = lazy(() => import("../adminClients/ClientsAdmin"));
+const WorksAdmin = lazy(() => import("../adminWorks/WorksAdmin"));
 
 // Loading component for lazy loading
 const LoadingFallback = () => (
@@ -60,6 +65,7 @@ const NAV_ITEMS = [
   { id: "careers", label: "Careers", icon: Briefcase, color: "orange" },
   { id: "teams", label: "Teams", icon: Briefcase, color: "red" },
   { id: "clients", label: "Clients", icon: Handshake, color: "emerald" },
+  { id: "works", label: "Our Works", icon: PanelsTopLeft, color: "blue" },
 ];
 
 const Admin_Main_Page = () => {
@@ -164,6 +170,8 @@ const Admin_Main_Page = () => {
         return TeamAdmin;
       case "clients":
         return ClientsAdmin;
+      case "works":
+        return WorksAdmin;
       default:
         return AdminContactsPage;
     }
@@ -210,8 +218,7 @@ const Admin_Main_Page = () => {
   const handleLogout = async () => {
     confirm("are you sure you want to logout?");
     try {
-      // const res = await fetch("http://localhost/gr8/api/auth/logout.php", {
-      const res = await fetch("https://api.gr8.com.np/gr8/api/auth/logout.php",{
+      const res = await fetch(`${API_BASE_URL}/auth/logout.php`,{
           method: "POST",
           credentials: "include", // important for sending session cookie
         },
@@ -230,7 +237,7 @@ const Admin_Main_Page = () => {
   };
 
   return (
-    <div className="flex h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="flex h-full overflow-hidden bg-linear-to-br from-gray-50 to-gray-100">
       {/* Sidebar Backdrop for Mobile */}
       <AnimatePresence>
         {!sidebarOpen && window.innerWidth < 768 && (
@@ -452,7 +459,7 @@ const Admin_Main_Page = () => {
       </motion.aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-hidden flex flex-col transition-all duration-300">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300">
         {/* Top Bar */}
         <header className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
           <div className="flex items-center justify-between">
@@ -570,7 +577,7 @@ const Admin_Main_Page = () => {
         </header>
 
         {/* Content Container */}
-        <div className="flex-1 overflow-auto p-4 md:p-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6">
           <Suspense fallback={<LoadingFallback />}>
             <ActiveComponent />
           </Suspense>
@@ -592,7 +599,7 @@ const Admin_Main_Page = () => {
             </div>
           </div>
         </footer>
-      </main>
+      </div>
     </div>
   );
 };

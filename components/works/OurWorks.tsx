@@ -42,9 +42,7 @@ function routeFromUrl(): Route {
   return SECTION_ROUTES.includes(section as Route) ? (section as Route) : "home";
 }
 
-/* ---------------------------------------------------------------- */
-/* Shared bits                                                       */
-/* ---------------------------------------------------------------- */
+/* Shared bits*/
 
 function LoadingImage({
   src,

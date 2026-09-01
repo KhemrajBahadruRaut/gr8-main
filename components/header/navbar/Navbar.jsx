@@ -52,7 +52,7 @@ const Navbar = () => {
   const menuItems = [
     { name: "Home", hasSubmenu: false, link: "/" },
     { name: "About us", hasSubmenu: false, link: "/about/" },
-    { name: "Portfolio", hasSubmenu: false, link: "/portfolio/" },
+    { name: "Portfolio", hasSubmenu: false, link: "/works/" },
     {
       name: "Services",
       hasSubmenu: true,

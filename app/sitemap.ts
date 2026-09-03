@@ -60,6 +60,30 @@ const getStaticEntries = (): MetadataRoute.Sitemap => {
       priority: 0.7,
     },
     {
+      url: `${BASE_URL}/works/`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/works/digital-marketing/`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/works/web-development/`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/works/virtual-assistance/`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${BASE_URL}/services/seo-services/`,
       lastModified,
       changeFrequency: "monthly",

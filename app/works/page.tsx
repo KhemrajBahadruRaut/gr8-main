@@ -1,10 +1,5 @@
-import OurWorks from '@/components/works/OurWorks'
-import React from 'react'
+import OurWorks from "@/components/works/OurWorks";
 
-export default function page() {
-  return (
-    <div>
-      <OurWorks/>
-    </div>
-  )
+export default function WorksPage() {
+  return <OurWorks />;
 }

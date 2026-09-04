@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import {
   LoadingImage,
   PageHeader,
@@ -10,6 +11,8 @@ import {
   styles,
   useWorksContent,
 } from "./WorksShared";
+
+const MAX_VISIBLE_PROJECTS = 6;
 
 function ProjectModal({
   clientName,
@@ -112,6 +115,21 @@ export default function DigitalMarketingWorks() {
     ? null
     : section.clients[selectedClientIndex] || null;
   const selectedImages = selectedClient?.work_image_urls || [];
+  const visibleImages = selectedImages.slice(0, MAX_VISIBLE_PROJECTS);
+  const socialLinks = [
+    {
+      name: "Facebook",
+      href: selectedClient?.facebook_url || "",
+      icon: FaFacebookF,
+      className: styles.facebookLink,
+    },
+    {
+      name: "Instagram",
+      href: selectedClient?.instagram_url || "",
+      icon: FaInstagram,
+      className: styles.instagramLink,
+    },
+  ].filter(({ href }) => href);
 
   return (
     <WorksFrame>
@@ -167,7 +185,7 @@ export default function DigitalMarketingWorks() {
           </div>
           {selectedImages.length ? (
             <div className={styles.workGrid}>
-              {selectedImages.map((imageUrl, index) => (
+              {visibleImages.map((imageUrl, index) => (
                 <button
                   type="button"
                   className={styles.workCard}
@@ -188,13 +206,34 @@ export default function DigitalMarketingWorks() {
           ) : (
             <WorksEmpty label={`No images available for ${selectedClient.name}`} />
           )}
+          {socialLinks.length > 0 && (
+            <div className={styles.socialLinks}>
+              <p>View all of {selectedClient.name}&apos;s work</p>
+              <div>
+                {socialLinks.map(({ name, href, icon: Icon, className }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${styles.socialLink} ${className}`}
+                    aria-label={`View all ${selectedClient.name} projects on ${name}`}
+                  >
+                    <Icon aria-hidden="true" />
+                    View all on {name}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
-      {selectedClient && modalImageIndex !== null && selectedImages[modalImageIndex] && (
+      {selectedClient && modalImageIndex !== null && visibleImages[modalImageIndex] && (
         <ProjectModal
           clientName={selectedClient.name}
-          images={selectedImages}
+          images={visibleImages}
           activeIndex={modalImageIndex}
           onChange={changeModalImage}
           onClose={closeModal}

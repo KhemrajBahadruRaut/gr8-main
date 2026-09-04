@@ -31,6 +31,8 @@ export type WorkClient = {
   logo_kind: ClientLogoKind;
   logo_url: string;
   project_url: string;
+  facebook_url: string;
+  instagram_url: string;
   work_image_url: string;
   work_image_urls: string[];
   highlighted?: boolean;
@@ -160,6 +162,8 @@ const normalizeClients = (value: unknown): WorkClient[] => {
       logo_kind: text(client.logo_kind, "reliable") as ClientLogoKind,
       logo_url: text(client.logo_url),
       project_url: text(client.project_url),
+      facebook_url: text(client.facebook_url),
+      instagram_url: text(client.instagram_url),
       work_image_url: workImageUrls[0] || "",
       work_image_urls: workImageUrls,
       highlighted: Boolean(client.highlighted),

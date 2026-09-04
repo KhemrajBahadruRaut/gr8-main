@@ -210,6 +210,43 @@
 
 .digitalProjects { margin-top: 64px; }
 
+.socialLinks {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.socialLinks p {
+  margin: 0 0 14px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.socialLinks > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: #1a1d27;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.socialLink:hover { transform: translateY(-2px); }
+.facebookLink:hover { border-color: #1877f2; background: #1877f2; }
+.instagramLink:hover { border-color: #d62976; background: #d62976; }
+
 .clientSelectorGrid,
 .workGrid,
 .projectGrid,

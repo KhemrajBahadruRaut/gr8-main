@@ -404,14 +404,30 @@ function ClientEditor({
           </div>
         </div>
         {showWorkImage && (
-          <div className="md:col-span-2">
-            <MultiUploadField
-              label="Completed work images"
-              values={client.work_image_urls}
-              onChange={(value) => setField("work_image_urls", value)}
-              onUpload={onUpload}
+          <>
+            <div className="md:col-span-2">
+              <MultiUploadField
+                label="Completed work images"
+                values={client.work_image_urls}
+                onChange={(value) => setField("work_image_urls", value)}
+                onUpload={onUpload}
+              />
+            </div>
+            <Field
+              label="Facebook URL"
+              type="url"
+              value={client.facebook_url}
+              onChange={(value) => setField("facebook_url", value)}
+              placeholder="https://facebook.com/..."
             />
-          </div>
+            <Field
+              label="Instagram URL"
+              type="url"
+              value={client.instagram_url}
+              onChange={(value) => setField("instagram_url", value)}
+              placeholder="https://instagram.com/..."
+            />
+          </>
         )}
             </div>
             {allowHighlight && (
@@ -546,6 +562,8 @@ export default function WorksAdmin() {
       logo_kind: "reliable",
       logo_url: "",
       project_url: "",
+      facebook_url: "",
+      instagram_url: "",
       work_image_url: "",
       work_image_urls: [],
     });

@@ -166,7 +166,12 @@ export default function DigitalMarketingWorks() {
                 />
                 <span className={styles.clientSelectorCopy}>
                   <strong>{client.name}</strong>
-                  <span>{client.work_image_urls.length} {client.work_image_urls.length === 1 ? "project" : "projects"}</span>
+                  <span>
+                    {Math.min(client.work_image_urls.length, MAX_VISIBLE_PROJECTS)}{" "}
+                    {Math.min(client.work_image_urls.length, MAX_VISIBLE_PROJECTS) === 1
+                      ? "project"
+                      : "projects"}
+                  </span>
                 </span>
                 <span className={styles.clientArrow}>→</span>
               </button>

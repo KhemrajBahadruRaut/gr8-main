@@ -38,7 +38,7 @@ const Footer = () => {
       title: "RESOURCES",
       links: [
         { label: "Blog", href: "/blogs/" },
-        { label: "Portfolio", href: "/portfolio/" },
+        { label: "Portfolio", href: "/projects/" },
         { label: "Merchendise", href: "/merchendise/" },
         { label: "Contact Us", href: "/contact/" },
       ],

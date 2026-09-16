@@ -213,7 +213,7 @@ export function PageHeader({
 }) {
   return (
     <header className={styles.pageHeader}>
-      <Link href="/works/" className={styles.backLink}>← Back to works</Link>
+      <Link href="/projects/" className={styles.backLink}>← Back to projects</Link>
       {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
       {title && <h1>{title}</h1>}
       {subtitle && <p className={styles.subtitle}>{subtitle}</p>}

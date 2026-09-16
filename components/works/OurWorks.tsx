@@ -25,7 +25,7 @@ export default function OurWorks() {
   useEffect(() => {
     const section = new URL(window.location.href).searchParams.get("section") as WorkRoute | null;
     if (section && DETAIL_ROUTES.includes(section)) {
-      router.replace(`/works/${section}/`);
+      router.replace(`/projests/${section}/`);
     }
   }, [router]);
 
@@ -47,7 +47,7 @@ export default function OurWorks() {
             {content.home.panels.map((panel, index) => (
               <Link
                 key={panel.route}
-                href={`/works/${panel.route}/`}
+                href={`/projects/${panel.route}/`}
                 className={styles.panel}
                 style={{ "--panel-accent": panel.accent } as CSSProperties}
               >

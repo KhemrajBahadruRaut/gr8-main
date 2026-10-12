@@ -10,6 +10,7 @@ import {
   WorksLoading,
   styles,
   useWorksContent,
+  useWorksSelectionScroll,
 } from "./WorksShared";
 
 function ProjectImage({ project, priority = false }: { project: WebProject; priority?: boolean }) {
@@ -29,6 +30,7 @@ function ProjectImage({ project, priority = false }: { project: WebProject; prio
 export default function WebDevelopmentWorks() {
   const content = useWorksContent();
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const { sectionRef: featuredRef, revealSelection } = useWorksSelectionScroll<HTMLDivElement>();
 
   useEffect(() => {
     if (content && featuredIndex >= content.web_development.projects.length) {
@@ -51,6 +53,7 @@ export default function WebDevelopmentWorks() {
     setFeaturedIndex((current) =>
       (current + direction + section.projects.length) % section.projects.length,
     );
+    revealSelection();
   };
 
   return (
@@ -65,7 +68,7 @@ export default function WebDevelopmentWorks() {
         <WorksEmpty label="No web development projects available" />
       ) : (
         <div className={styles.webContent}>
-          <div className={styles.featuredShell}>
+          <div ref={featuredRef} className={styles.featuredShell}>
             {section.projects.length > 1 && (
               <button type="button" className={styles.navArrow} onClick={() => cycle(-1)} aria-label="Previous project">←</button>
             )}
@@ -106,7 +109,10 @@ export default function WebDevelopmentWorks() {
                 <article
                   key={`${item.name}-${index}`}
                   className={styles.projectCard}
-                  onClick={() => setFeaturedIndex(index)}
+                  onClick={() => {
+                    setFeaturedIndex(index);
+                    revealSelection();
+                  }}
                 >
                   <div className={styles.projectThumb}>
                     <ProjectImage project={item} />

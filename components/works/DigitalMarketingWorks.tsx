@@ -10,6 +10,7 @@ import {
   WorksLoading,
   styles,
   useWorksContent,
+  useWorksSelectionScroll,
 } from "./WorksShared";
 
 const MAX_VISIBLE_PROJECTS = 6;
@@ -103,6 +104,7 @@ export default function DigitalMarketingWorks() {
   const content = useWorksContent();
   const [selectedClientIndex, setSelectedClientIndex] = useState<number | null>(null);
   const [modalImageIndex, setModalImageIndex] = useState<number | null>(null);
+  const { sectionRef: projectsRef, revealSelection } = useWorksSelectionScroll<HTMLElement>();
   const closeModal = useCallback(() => setModalImageIndex(null), []);
   const changeModalImage = useCallback((index: number) => setModalImageIndex(index), []);
 
@@ -154,6 +156,7 @@ export default function DigitalMarketingWorks() {
                 onClick={() => {
                   setSelectedClientIndex(index);
                   setModalImageIndex(null);
+                  revealSelection();
                 }}
                 aria-pressed={selectedClientIndex === index}
               >
@@ -183,7 +186,7 @@ export default function DigitalMarketingWorks() {
       </section>
 
       {selectedClient && (
-        <section className={styles.digitalProjects} aria-live="polite">
+        <section ref={projectsRef} className={styles.digitalProjects} aria-live="polite">
           <div className={styles.sectionHeading}>
             <p>{selectedClient.name}</p>
             <h2>Digital marketing projects</h2>

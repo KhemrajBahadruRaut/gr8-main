@@ -14,6 +14,25 @@ import TrustedBySection from "../banner/Banner";
 import StartProjectSection from "./StartProjectSection";
 import styles from "./works.module.css";
 
+export function useWorksSelectionScroll<T extends HTMLElement>() {
+  const sectionRef = useRef<T>(null);
+  const [selectionCount, setSelectionCount] = useState(0);
+
+  useEffect(() => {
+    if (selectionCount === 0) return;
+    sectionRef.current?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+      block: "start",
+    });
+  }, [selectionCount]);
+
+  const revealSelection = () => setSelectionCount((count) => count + 1);
+
+  return { sectionRef, revealSelection };
+}
+
 export function useWorksContent(): WorksContent | null {
   const [content, setContent] = useState<WorksContent | null>(null);
 

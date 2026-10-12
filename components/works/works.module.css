@@ -210,6 +210,9 @@
 
 .digitalProjects { margin-top: 64px; }
 
+.digitalProjects,
+.featuredShell { scroll-margin-top: 48px; }
+
 .socialLinks {
   margin-top: 30px;
   text-align: center;

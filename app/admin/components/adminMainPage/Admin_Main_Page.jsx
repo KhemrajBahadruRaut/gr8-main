@@ -21,6 +21,7 @@ import {
   Briefcase,
   Handshake,
   PanelsTopLeft,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,6 +42,7 @@ const AdminSubscribersPage = lazy(
 const AdminCareersPage = lazy(() => import("../adminCareers/AdminCareersPage"));
 const ClientsAdmin = lazy(() => import("../adminClients/ClientsAdmin"));
 const WorksAdmin = lazy(() => import("../adminWorks/WorksAdmin"));
+const ProjectVisitorsAdmin = lazy(() => import("../adminProjectVisitors/ProjectVisitorsAdmin"));
 
 // Loading component for lazy loading
 const LoadingFallback = () => (
@@ -66,6 +68,7 @@ const NAV_ITEMS = [
   { id: "teams", label: "Teams", icon: Briefcase, color: "red" },
   { id: "clients", label: "Clients", icon: Handshake, color: "emerald" },
   { id: "works", label: "Our Works", icon: PanelsTopLeft, color: "blue" },
+  { id: "project-visitors", label: "Project Visitors", icon: Users, color: "purple" },
 ];
 
 const Admin_Main_Page = () => {
@@ -172,6 +175,8 @@ const Admin_Main_Page = () => {
         return ClientsAdmin;
       case "works":
         return WorksAdmin;
+      case "project-visitors":
+        return ProjectVisitorsAdmin;
       default:
         return AdminContactsPage;
     }
@@ -472,7 +477,7 @@ const Admin_Main_Page = () => {
                 <Menu className="w-5 h-5" />
               </button>
               <h2 className="text-xl font-bold text-gray-800 capitalize">
-                {activeSection}
+                {NAV_ITEMS.find((item) => item.id === activeSection)?.label || activeSection}
               </h2>
               <ChevronRight className="w-4 h-4 text-gray-400" />
               <span className="text-gray-600">Dashboard</span>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import {
   LoadingImage,
   WorksFrame,
@@ -11,6 +11,7 @@ import {
   useWorksContent,
 } from "./WorksShared";
 import type { WorkRoute } from "@/lib/works-content";
+import { ProjectVerificationDialog } from "./ProjectVerification";
 
 const DETAIL_ROUTES: WorkRoute[] = [
   "digital-marketing",
@@ -21,11 +22,12 @@ const DETAIL_ROUTES: WorkRoute[] = [
 export default function OurWorks() {
   const router = useRouter();
   const content = useWorksContent();
+  const [requestedRoute, setRequestedRoute] = useState<WorkRoute | null>(null);
 
   useEffect(() => {
     const section = new URL(window.location.href).searchParams.get("section") as WorkRoute | null;
     if (section && DETAIL_ROUTES.includes(section)) {
-      router.replace(`/projests/${section}/`);
+      setRequestedRoute(section);
     }
   }, [router]);
 
@@ -48,6 +50,12 @@ export default function OurWorks() {
               <Link
                 key={panel.route}
                 href={`/projects/${panel.route}/`}
+                prefetch={false}
+                onClick={(event) => {
+                  if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
+                  setRequestedRoute(panel.route);
+                }}
                 className={styles.panel}
                 style={{ "--panel-accent": panel.accent } as CSSProperties}
               >
@@ -68,6 +76,17 @@ export default function OurWorks() {
             ))}
           </div>
         </>
+      )}
+      {requestedRoute && (
+        <ProjectVerificationDialog
+          key={requestedRoute}
+          category={requestedRoute}
+          onClose={() => setRequestedRoute(null)}
+          onVerified={() => {
+            router.push(`/projects/${requestedRoute}/`);
+            setRequestedRoute(null);
+          }}
+        />
       )}
     </WorksFrame>
   );

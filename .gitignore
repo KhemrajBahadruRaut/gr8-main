@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/.data/
+/backend/api/project-visitors/vendor/
+/backend/api/project-visitors/config.php
 
 # next.js
 /.next/

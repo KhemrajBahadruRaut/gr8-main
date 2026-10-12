@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Project access verification and the admin Project Visitors list require server-side
+email and persistent storage configuration. See [setup instructions](docs/project-visitors.md).
+
 ## Getting Started
 
 First, run the development server:

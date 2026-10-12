@@ -36,6 +36,7 @@ export function useWorksContent(): WorksContent | null {
       try {
         const response = await fetch(`${getGr8ApiBase()}/works/get_works.php?_=${Date.now()}`, {
           cache: "no-store",
+          credentials: "include",
           signal: controller.signal,
         });
         if (!response.ok) throw new Error("Unable to load Our Works content");

@@ -53,7 +53,7 @@ export default function MainPage() {
               style={{ animationDelay: "400ms" }}
               href="/projects/"
             >
-              See our Projects
+              Explore Our Projects
             </Link>
 
             <Link

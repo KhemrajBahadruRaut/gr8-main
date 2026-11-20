@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 
-const BLOG_API_URL = "https://api.gr8.com.np/gr8/api/blogs/get_blog.php";
-
-export default function BlogsSection() {
-  const [blogs, setBlogs] = useState([]);
+export default function BlogsSection({ blogs = [] }) {
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const blogsRef = useRef(null);
@@ -16,24 +13,6 @@ export default function BlogsSection() {
   const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
   const blogsInView = useInView(blogsRef, { once: true, threshold: 0.2 });
   const buttonInView = useInView(buttonRef, { once: true, threshold: 0.3 });
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await fetch(BLOG_API_URL, { cache: "no-store" });
-        const data = await response.json();
-
-        if (data?.success && Array.isArray(data.blogs)) {
-          // Keep the same API ordering as the full blogs page and show its first three entries.
-          setBlogs(data.blogs.filter(Boolean).slice(0, 3));
-        }
-      } catch (error) {
-        console.error("Error fetching latest blogs", error);
-      }
-    };
-
-    void fetchBlogs();
-  }, []);
 
   const parseTags = (tagsString) =>
     (tagsString || "")
@@ -199,6 +178,8 @@ export default function BlogsSection() {
                       <img
                         src={blog.image}
                         alt={blog.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-110 rounded-xl transition-transform duration-500"
                       />
                     </motion.div>

@@ -1,0 +1,4 @@
+# Prevent the web server from returning environment files.
+<FilesMatch "^\.env(?:\..*)?$">
+    Require all denied
+</FilesMatch>

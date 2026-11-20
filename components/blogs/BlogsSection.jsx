@@ -1,9 +1,14 @@
-import React, { useRef } from "react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 
+const BLOG_API_URL = "https://api.gr8.com.np/gr8/api/blogs/get_blog.php";
+
 export default function BlogsSection() {
+  const [blogs, setBlogs] = useState([]);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const blogsRef = useRef(null);
@@ -12,51 +17,32 @@ export default function BlogsSection() {
   const blogsInView = useInView(blogsRef, { once: true, threshold: 0.2 });
   const buttonInView = useInView(buttonRef, { once: true, threshold: 0.3 });
 
-  const blogs = [
-    {
-      id: 1,
-      image:
-        "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&q=80",
-      tags: [
-        { label: "Digital Growth", color: "teal" },
-        { label: "Featured", color: "purple" },
-      ],
-      title: "Why Every Business Needs a Strong Digital Presence in 2025",
-      description:
-        "Discover how digital transformation is reshaping business landscapes and why establishing a robust online presence is crucial for success in the coming years.",
-      date: "21st May, 2025",
-      readTime: "5 min read",
-      slug: "digital-presence-2025" // Add slug for the URL
-    },
-    {
-      id: 2,
-      image:
-        "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80",
-      tags: [{ label: "Online Presence", color: "teal" }],
-      title:
-        "Discover why a strong online presence is essential for business growth",
-      description:
-        "Learn the key strategies and benefits of building a comprehensive digital footprint that drives customer engagement and business expansion.",
-      date: "25th Sept, 2025",
-      readTime: "8 min read",
-      slug: "online-presence-growth" // Add slug for the URL
-    },
-    {
-      id: 3,
-      image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-      tags: [
-        { label: "Digital Marketing", color: "teal" },
-        { label: "Trends", color: "purple" },
-      ],
-      title: "The Future of Digital Marketing: Trends to Watch in 2025",
-      description:
-        "Explore the emerging technologies and strategies that will define digital marketing success in the near future.",
-      date: "15th Oct, 2025",
-      readTime: "6 min read",
-      slug: "future-digital-marketing" // Add slug for the URL
-    },
-  ];
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch(BLOG_API_URL, { cache: "no-store" });
+        const data = await response.json();
+
+        if (data?.success && Array.isArray(data.blogs)) {
+          // Keep the same API ordering as the full blogs page and show its first three entries.
+          setBlogs(data.blogs.filter(Boolean).slice(0, 3));
+        }
+      } catch (error) {
+        console.error("Error fetching latest blogs", error);
+      }
+    };
+
+    void fetchBlogs();
+  }, []);
+
+  const parseTags = (tagsString) =>
+    (tagsString || "")
+      .split(",")
+      .filter(Boolean)
+      .map((tag, index) => ({
+        label: tag.trim(),
+        color: index % 2 === 0 ? "teal" : "purple",
+      }));
 
   // Animation variants
   const containerVariants = {
@@ -194,7 +180,14 @@ export default function BlogsSection() {
                 whileHover="hover"
               >
                 {/* Update the Link href to use the slug instead of id */}
-                <Link href={`/blogs/${blog.slug}/`} className="block h-full">
+                <Link
+                  href={
+                    blog.slug?.trim()
+                      ? `/blogs/${encodeURIComponent(blog.slug.trim())}/`
+                      : "/blogs/"
+                  }
+                  className="block h-full"
+                >
                   {" "}
                   <div className="relative h-48 overflow-hidden p-6">
                     <motion.div
@@ -220,7 +213,7 @@ export default function BlogsSection() {
                       animate={blogsInView ? "visible" : "hidden"}
                       variants={containerVariants}
                     >
-                      {blog.tags.map((tag, tagIndex) => (
+                      {parseTags(blog.tags).map((tag, tagIndex) => (
                         <motion.span
                           key={tagIndex}
                           className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -273,7 +266,7 @@ export default function BlogsSection() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4" />
-                        <span>{blog.readTime}</span>
+                        <span>{blog.read_time}</span>
                       </div>
                     </motion.div>
                   </div>

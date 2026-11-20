@@ -1,0 +1,5 @@
+.env
+.env.*
+!.env.example
+/api/project-visitors/config.php
+/api/project-visitors/vendor/
